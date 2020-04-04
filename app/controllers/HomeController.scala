@@ -28,10 +28,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("Subcategories"))
   }
 
-  def bestsellers = Action {
-    Ok(views.html.index("Bestselllers."))
-  }
-
   def products = Action {
     Ok(views.html.index("Products."))
   }
@@ -48,6 +44,14 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("Basket."))
   }
 
+  def orders = Action {
+    Ok(views.html.index("Orders' status."))
+  }
+
+  def orderedProducts = Action {
+    Ok(views.html.index("Products from the order."))
+  }
+
   def orderAddress = Action {
     Ok(views.html.index("Where to send the order."))
   }
@@ -56,8 +60,5 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("Payment"))
   }
 
-  def orders = Action {
-    Ok(views.html.index("Orders' status."))
-  }
 
 }

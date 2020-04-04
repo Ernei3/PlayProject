@@ -25,11 +25,6 @@ POST        /addReview                  controllers.HomeController.reviews
 PUT         /changeReview               controllers.HomeController.reviews
 DELETE      /removeReview               controllers.HomeController.reviews
 
-GET         /bestsellers                controllers.HomeController.bestsellers
-POST        /addBestseller              controllers.HomeController.bestsellers
-PUT         /changeBestseller           controllers.HomeController.bestsellers
-DELETE      /removeBestseller           controllers.HomeController.bestsellers
-
 GET         /wishlist                   controllers.HomeController.wishlist
 POST        /addToWishlist              controllers.HomeController.wishlist
 PUT         /changeQuantity             controllers.HomeController.wishlist
@@ -40,6 +35,16 @@ POST        /addToBasket                controllers.HomeController.basket
 PUT         /changeQuantity             controllers.HomeController.basket
 DELETE      /removeFromBasket           controllers.HomeController.basket
 
+GET         /orders                     controllers.HomeController.orders
+POST        /addOrder                   controllers.HomeController.orders
+PUT         /changeOrder                controllers.HomeController.orders
+DELETE      /removeOrder                controllers.HomeController.orders
+
+GET         /orderedProduct             controllers.HomeController.orderedProducts
+POST        /addToOrder                 controllers.HomeController.orderedProducts
+PUT         /changeOrdered              controllers.HomeController.orderedProducts
+DELETE      /removeOrdered              controllers.HomeController.orderedProducts
+
 GET         /orderAddress               controllers.HomeController.orderAddress
 POST        /sendAddress                controllers.HomeController.orderAddress
 PUT         /changeAddress              controllers.HomeController.orderAddress
@@ -49,13 +54,6 @@ GET         /payment                    controllers.HomeController.payment
 POST        /sendPayment                controllers.HomeController.payment
 PUT         /changePayment              controllers.HomeController.payment
 DELETE      /removePayment              controllers.HomeController.payment
-
-GET         /orders                     controllers.HomeController.orders
-POST        /addOrder                   controllers.HomeController.orders
-PUT         /changeOrder                controllers.HomeController.orders
-DELETE      /removeOrder                controllers.HomeController.orders
-
-
 
 
 

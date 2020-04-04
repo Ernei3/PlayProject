@@ -20,20 +20,20 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("This is the main page."))
   }
 
-  def products = Action {
-    Ok(views.html.index("Products."))
-  }
-
   def categories = Action {
     Ok(views.html.index("Categories"))
+  }
+
+  def subcategories = Action {
+    Ok(views.html.index("Subcategories"))
   }
 
   def bestsellers = Action {
     Ok(views.html.index("Bestselllers."))
   }
 
-  def newProducts = Action {
-    Ok(views.html.index("New products."))
+  def products = Action {
+    Ok(views.html.index("Products."))
   }
 
   def reviews = Action {

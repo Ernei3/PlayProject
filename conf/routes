@@ -5,31 +5,30 @@
 
 GET     /                           controllers.HomeController.index
 
+GET         /categories                 controllers.HomeController.categories
+POST        /addCategory                controllers.HomeController.categories
+PUT         /changeCategory             controllers.HomeController.categories
+DELETE      /removeCategory             controllers.HomeController.categories
+
+GET         /subcategories              controllers.HomeController.subcategories
+POST        /addSub                     controllers.HomeController.subcategories
+PUT         /changeSub                  controllers.HomeController.subcategories
+DELETE      /removeSub                  controllers.HomeController.subcategories
 
 GET         /products                   controllers.HomeController.products
 POST        /addProduct                 controllers.HomeController.products
 PUT         /changeProduct              controllers.HomeController.products
 DELETE      /removeProduct              controllers.HomeController.products
 
-GET         /categories                 controllers.HomeController.categories
-POST        /addCategory                controllers.HomeController.categories
-PUT         /changeCategory             controllers.HomeController.categories
-DELETE      /removeCategory             controllers.HomeController.categories
+GET         /reviews                    controllers.HomeController.reviews
+POST        /addReview                  controllers.HomeController.reviews
+PUT         /changeReview               controllers.HomeController.reviews
+DELETE      /removeReview               controllers.HomeController.reviews
 
 GET         /bestsellers                controllers.HomeController.bestsellers
 POST        /addBestseller              controllers.HomeController.bestsellers
 PUT         /changeBestseller           controllers.HomeController.bestsellers
 DELETE      /removeBestseller           controllers.HomeController.bestsellers
-
-GET         /new                        controllers.HomeController.newProducts
-POST        /addNew                     controllers.HomeController.newProducts
-PUT         /changeNew                  controllers.HomeController.newProducts
-DELETE      /removeNew                  controllers.HomeController.newProducts
-
-GET         /reviews                    controllers.HomeController.reviews
-POST        /addReview                  controllers.HomeController.reviews
-PUT         /changeReview               controllers.HomeController.reviews
-DELETE      /removeReview               controllers.HomeController.reviews
 
 GET         /wishlist                   controllers.HomeController.wishlist
 POST        /addToWishlist              controllers.HomeController.wishlist

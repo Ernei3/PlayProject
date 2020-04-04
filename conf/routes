@@ -6,55 +6,64 @@
 GET     /                           controllers.HomeController.index
 
 GET         /categories                 controllers.HomeController.categories
-POST        /addCategory                controllers.HomeController.categories
-PUT         /changeCategory             controllers.HomeController.categories
-DELETE      /removeCategory             controllers.HomeController.categories
+GET         /getCategory/:id            controllers.HomeController.getCategory(id: Integer)
+GET         /addCategoryMenu            controllers.HomeController.addCategoryMenu
+POST        /addCategory                controllers.HomeController.addCategory
+PUT         /updateCategory             controllers.HomeController.updateCategory
+DELETE      /removeCategory             controllers.HomeController.removeCategory
 
 GET         /subcategories              controllers.HomeController.subcategories
-POST        /addSub                     controllers.HomeController.subcategories
-PUT         /changeSub                  controllers.HomeController.subcategories
-DELETE      /removeSub                  controllers.HomeController.subcategories
+GET         /getSub/:id                 controllers.HomeController.getSub(id: Integer)
+GET         /addSubMenu                 controllers.HomeController.addSubMenu
+POST        /addSub                     controllers.HomeController.addSub
+PUT         /updateSub                  controllers.HomeController.updateSub
+DELETE      /removeSub                  controllers.HomeController.removeSub
 
 GET         /products                   controllers.HomeController.products
-POST        /addProduct                 controllers.HomeController.products
-PUT         /changeProduct              controllers.HomeController.products
-DELETE      /removeProduct              controllers.HomeController.products
+GET         /productsByCat/:catId       controllers.HomeController.productsByCat(catId: Integer)
+GET         /productBySub/:subId        controllers.HomeController.productsBySub(subId: Integer)
+GET         /productDetails/:id         controllers.HomeController.productDetails(id: Integer)
+GET         /addProductMenu             controllers.HomeController.addProductMenu
+POST        /addProduct                 controllers.HomeController.addProduct
+PUT         /updateProduct              controllers.HomeController.updateProduct
+DELETE      /removeProduct              controllers.HomeController.removeProduct
 
-GET         /reviews                    controllers.HomeController.reviews
-POST        /addReview                  controllers.HomeController.reviews
-PUT         /changeReview               controllers.HomeController.reviews
-DELETE      /removeReview               controllers.HomeController.reviews
+GET         /reviews/:productId         controllers.HomeController.reviews(productId: Integer)
+GET         /addReviewMenu/             controllers.HomeController.addReviewMenu
+POST        /addReview                  controllers.HomeController.addReview
+PUT         /updateReview               controllers.HomeController.updateReview
+DELETE      /removeReview               controllers.HomeController.removeReview
 
 GET         /wishlist                   controllers.HomeController.wishlist
-POST        /addToWishlist              controllers.HomeController.wishlist
-PUT         /changeQuantity             controllers.HomeController.wishlist
-DELETE      /removeFromWishlist         controllers.HomeController.wishlist
+POST        /addToWishlist              controllers.HomeController.addToWishlist
+PUT         /updateWishlist             controllers.HomeController.updateWishlist
+DELETE      /removeFromWishlist         controllers.HomeController.removeFromWishlist
 
 GET         /basket                     controllers.HomeController.basket
-POST        /addToBasket                controllers.HomeController.basket
-PUT         /changeQuantity             controllers.HomeController.basket
-DELETE      /removeFromBasket           controllers.HomeController.basket
+POST        /addToBasket                controllers.HomeController.addToBasket
+PUT         /changeQuantity             controllers.HomeController.changeQuantity
+DELETE      /removeFromBasket           controllers.HomeController.removeFromBasket
 
 GET         /orders                     controllers.HomeController.orders
-POST        /addOrder                   controllers.HomeController.orders
-PUT         /changeOrder                controllers.HomeController.orders
-DELETE      /removeOrder                controllers.HomeController.orders
+GET         /orderDetails/:id           controllers.HomeController.orderDetails(id: Integer)
+POST        /addOrder                   controllers.HomeController.addOrder
+PUT         /updateOrder                controllers.HomeController.updateOrder
+DELETE      /removeOrder                controllers.HomeController.removeOrder
 
-GET         /orderedProduct             controllers.HomeController.orderedProducts
-POST        /addToOrder                 controllers.HomeController.orderedProducts
-PUT         /changeOrdered              controllers.HomeController.orderedProducts
-DELETE      /removeOrdered              controllers.HomeController.orderedProducts
+GET         /orderedProducts/:orderId   controllers.HomeController.orderedProducts(orderId: Integer)
+POST        /addToOrder                 controllers.HomeController.addToOrder
+PUT         /changeOrdered              controllers.HomeController.changeOrdered
+DELETE      /removeOrdered              controllers.HomeController.removeOrdered
 
-GET         /orderAddress               controllers.HomeController.orderAddress
-POST        /sendAddress                controllers.HomeController.orderAddress
-PUT         /changeAddress              controllers.HomeController.orderAddress
-DELETE      /removeAddress              controllers.HomeController.orderAddress
+GET         /orderAddress/:orderId      controllers.HomeController.orderAddress(orderId: Integer)
+POST        /addAddress                 controllers.HomeController.addAddress
+PUT         /changeAddress              controllers.HomeController.changeAddress
+DELETE      /removeAddress              controllers.HomeController.removeAddress
 
-GET         /payment                    controllers.HomeController.payment
-POST        /sendPayment                controllers.HomeController.payment
-PUT         /changePayment              controllers.HomeController.payment
-DELETE      /removePayment              controllers.HomeController.payment
-
+GET         /payment/:orderId           controllers.HomeController.payment(orderId: Integer)
+POST        /sendPayment                controllers.HomeController.sendPayment
+PUT         /changePayment              controllers.HomeController.changePayment
+DELETE      /removePayment              controllers.HomeController.removePayment
 
 
 

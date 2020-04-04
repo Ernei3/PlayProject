@@ -27,7 +27,7 @@ DELETE      /removeReview               controllers.HomeController.reviews
 
 GET         /wishlist                   controllers.HomeController.wishlist
 POST        /addToWishlist              controllers.HomeController.wishlist
-PUT         /changeQuantity             controllers.HomeController.wishlist
+PUT         /changeWishlist             controllers.HomeController.wishlist
 DELETE      /removeFromWishlist         controllers.HomeController.wishlist
 
 GET         /basket                     controllers.HomeController.basket
@@ -37,7 +37,7 @@ DELETE      /removeFromBasket           controllers.HomeController.basket
 
 GET         /orders                     controllers.HomeController.orders
 POST        /addOrder                   controllers.HomeController.orders
-PUT         /changeOrder                controllers.HomeController.orders
+PUT         /changeWish                controllers.HomeController.orders
 DELETE      /removeOrder                controllers.HomeController.orders
 
 GET         /orderedProduct             controllers.HomeController.orderedProducts

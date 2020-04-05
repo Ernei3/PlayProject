@@ -50,7 +50,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("Subcategories"))
   }
 
-  def getSub(id: Integer) = Action {
+  def getSub(id: Int) = Action {
     Ok(views.html.index("Subcategory: "+id))
   }
 
@@ -78,15 +78,15 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("Products."))
   }
 
-  def productsByCat(catId: Integer) = Action {
+  def productsByCat(catId: Int) = Action {
     Ok(views.html.index("Products from category: "+ catId))
   }
 
-  def productsBySub(subId: Integer) = Action {
+  def productsBySub(subId: Int) = Action {
     Ok(views.html.index("Products from subcategory: "+subId))
   }
 
-  def productDetails(id: Integer) = Action {
+  def productDetails(id: Int) = Action {
     Ok(views.html.index("Product details: "+id))
   }
 
@@ -107,7 +107,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   }
 
 
-  def reviews(productId: Integer) = Action {
+  def reviews(productId: Int) = Action {
     Ok(views.html.index("Reviews to product: "+productId))
   }
 
@@ -163,7 +163,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("Orders' list."))
   }
 
-  def orderDetails(id: Integer) = Action {
+  def orderDetails(id: Int) = Action {
     Ok(views.html.index("Order details of: "+id))
   }
 
@@ -181,7 +181,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
 
 
-  def orderedProducts(orderId: Integer) = Action {
+  def orderedProducts(orderId: Int) = Action {
     Ok(views.html.index("Products from the order: "+orderId))
   }
   def addToOrder = Action {
@@ -196,7 +196,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
 
 
-  def orderAddress(orderId: Integer) = Action {
+  def orderAddress(orderId: Int) = Action {
     Ok(views.html.index("Address of the order: "+orderId))
   }
 
@@ -214,7 +214,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
 
 
-  def payment(orderId: Integer) = Action {
+  def payment(orderId: Int) = Action {
     Ok(views.html.index("Payment to the order: "+orderId))
   }
 

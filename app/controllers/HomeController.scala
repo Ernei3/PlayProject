@@ -20,31 +20,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("This is the main page."))
   }
 
-  def categories = Action {
-    Ok(views.html.index("Categories"))
-  }
-
-  def addCategoryMenu = Action {
-    Ok(views.html.index("Menu to add a category"))
-  }
-
-  def addCategory = Action {
-    Ok(views.html.index("Adding a new category"))
-  }
-
-  def getCategory(id: Integer) = Action {
-    Ok(views.html.index("Category: "+id))
-  }
-
-  def updateCategory = Action {
-    Ok(views.html.index("Updating a category"))
-  }
-
-  def removeCategory = Action {
-    Ok(views.html.index("Removing a category"))
-  }
-
-
 
   def subcategories = Action {
     Ok(views.html.index("Subcategories"))

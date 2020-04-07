@@ -5,12 +5,12 @@
 
 GET     /                           controllers.HomeController.index
 
-GET         /categories                 controllers.HomeController.categories
-GET         /getCategory/:id            controllers.HomeController.getCategory(id: Int)
-GET         /addCategoryMenu            controllers.HomeController.addCategoryMenu
-POST        /addCategory                controllers.HomeController.addCategory
-PUT         /updateCategory             controllers.HomeController.updateCategory
-DELETE      /removeCategory             controllers.HomeController.removeCategory
+GET         /categories                 controllers.CategoryController.categories
+GET         /getCategory/:id            controllers.CategoryController.getCategory(id: Int)
+GET         /addCategoryMenu            controllers.CategoryController.addCategoryMenu
+POST        /addCategory                controllers.CategoryController.addCategory
+PUT         /updateCategory             controllers.CategoryController.updateCategory
+DELETE      /removeCategory             controllers.CategoryController.removeCategory
 
 GET         /subcategories              controllers.HomeController.subcategories
 GET         /getSub/:id                 controllers.HomeController.getSub(id: Int)

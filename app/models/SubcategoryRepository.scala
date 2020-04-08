@@ -35,15 +35,10 @@ class SubcategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
   private val cat = TableQuery[CategoryTable]
 
 
-  def create(name: String, category: Int): Future[Product] = db.run {
-    // We create a projection of just the name and age columns, since we're not inserting a value for the id column
+  def create(name: String, category: Int): Future[Subcategory] = db.run {
     (subcategory.map(s => (s.name, s.category))
-      // Now define it to return the id, because we want to know what id was generated for the person
       returning subcategory.map(_.id)
-      // And we define a transformation for the returned value, which combines our original parameters with the
-      // returned id
       into {case ((name,category),id) => Subcategory(id,name,category)}
-      // And finally, insert the product into the database
       ) += (name,category)
   }
 
@@ -51,19 +46,19 @@ class SubcategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
     subcategory.result
   }
 
-  def getByCategory(category_id: Int): Future[Seq[Product]] = db.run {
+  def getByCategory(category_id: Int): Future[Seq[Subcategory]] = db.run {
     subcategory.filter(_.category === category_id).result
   }
 
-  def getById(id: Int): Future[Product] = db.run {
+  def getById(id: Int): Future[Subcategory] = db.run {
     subcategory.filter(_.id === id).result.head
   }
 
-  def getByIdOption(id: Int): Future[Option[Product]] = db.run {
+  def getByIdOption(id: Int): Future[Option[Subcategory]] = db.run {
     subcategory.filter(_.id === id).result.headOption
   }
 
-  def getByCategories(category_ids: List[Int]): Future[Seq[Product]] = db.run {
+  def getByCategories(category_ids: List[Int]): Future[Seq[Subcategory]] = db.run {
     subcategory.filter(_.category inSet category_ids).result
   }
 

@@ -55,8 +55,8 @@ class  CategoryController @Inject()(categoryRepo: CategoryRepository, cc: Messag
 
   def updateCategoryMenu(id: Integer) = Action.async { implicit request =>
     val kategoria = categoryRepo.getById(id)
-    kategoria.map(product => {
-      val catForm = updateCategoryForm.fill(UpdateCategoryForm(product.id, product.name))
+    kategoria.map(category => {
+      val catForm = updateCategoryForm.fill(UpdateCategoryForm(category.id, category.name))
       Ok(views.html.updateCategoryMenu(catForm))
     })
   }

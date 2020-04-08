@@ -6,11 +6,11 @@
 GET     /                           controllers.HomeController.index
 
 GET         /categories                 controllers.CategoryController.categories
-GET         /getCategory/:id            controllers.CategoryController.getCategory(id: Int)
 GET         /addCategoryMenu            controllers.CategoryController.addCategoryMenu
 POST        /addCategory                controllers.CategoryController.addCategory
-PUT         /updateCategory             controllers.CategoryController.updateCategory
-DELETE      /removeCategory             controllers.CategoryController.removeCategory
+GET         /updateCategoryMenu/:id     controllers.CategoryController.updateCategoryMenu(id: Int)
+POST        /updateCategory             controllers.CategoryController.updateCategory
+GET         /removeCategory/:id         controllers.CategoryController.removeCategory(id: Int)
 
 GET         /subcategories              controllers.HomeController.subcategories
 GET         /getSub/:id                 controllers.HomeController.getSub(id: Int)

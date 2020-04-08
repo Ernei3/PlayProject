@@ -12,12 +12,12 @@ GET         /updateCategoryMenu/:id     controllers.CategoryController.updateCat
 POST        /updateCategory             controllers.CategoryController.updateCategory
 GET         /removeCategory/:id         controllers.CategoryController.removeCategory(id: Int)
 
-GET         /subcategories              controllers.HomeController.subcategories
-GET         /getSub/:id                 controllers.HomeController.getSub(id: Int)
-GET         /addSubMenu                 controllers.HomeController.addSubMenu
-POST        /addSub                     controllers.HomeController.addSub
-PUT         /updateSub                  controllers.HomeController.updateSub
-DELETE      /removeSub                  controllers.HomeController.removeSub
+GET         /subcategories              controllers.SubcategoryController.subcategories
+GET         /getSub/:id                 controllers.SubcategoryController.getSub(id: Int)
+GET         /addSubMenu                 controllers.SubcategoryController.addSubMenu
+POST        /addSub                     controllers.SubcategoryController.addSub
+PUT         /updateSub                  controllers.SubcategoryController.updateSub
+DELETE      /removeSub                  controllers.SubcategoryController.removeSub
 
 GET         /products                   controllers.HomeController.products
 GET         /productsByCat/:catId       controllers.HomeController.productsByCat(catId: Int)

@@ -13,20 +13,21 @@ POST        /updateCategory             controllers.CategoryController.updateCat
 GET         /removeCategory/:id         controllers.CategoryController.removeCategory(id: Int)
 
 GET         /subcategories              controllers.SubcategoryController.subcategories
+GET         /subByCat/:catId            controllers.SubcategoryController.subByCat(catId :Int)
 GET         /addSubMenu                 controllers.SubcategoryController.addSubMenu
 POST        /addSub                     controllers.SubcategoryController.addSub
 GET         /updateSubMenu/:id          controllers.SubcategoryController.updateSubMenu(id: Int)
 POST        /updateSub                  controllers.SubcategoryController.updateSub
 GET         /removeSub/:id              controllers.SubcategoryController.removeSub(id: Int)
 
-GET         /products                   controllers.HomeController.products
-GET         /productsByCat/:catId       controllers.HomeController.productsByCat(catId: Int)
-GET         /productBySub/:subId        controllers.HomeController.productsBySub(subId: Int)
-GET         /productDetails/:id         controllers.HomeController.productDetails(id: Int)
-GET         /addProductMenu             controllers.HomeController.addProductMenu
-POST        /addProduct                 controllers.HomeController.addProduct
-PUT         /updateProduct              controllers.HomeController.updateProduct
-DELETE      /removeProduct              controllers.HomeController.removeProduct
+GET         /products                   controllers.ProductController.products
+GET         /productsBySub/:subId        controllers.ProductController.productsBySub(subId: Int)
+GET         /productDetails/:id         controllers.ProductController.productDetails(id: Int)
+GET         /addProductMenu             controllers.ProductController.addProductMenu
+POST        /addProduct                 controllers.ProductController.addProduct
+GET         /updateProductMenu/:id      controllers.ProductController.updateProductMenu(id: Int)
+POST        /updateProduct              controllers.ProductController.updateProduct
+GET         /removeProduct/:id          controllers.ProductController.removeProduct(id: Int)
 
 GET         /reviews/:productId         controllers.HomeController.reviews(productId: Int)
 GET         /addReviewMenu/             controllers.HomeController.addReviewMenu

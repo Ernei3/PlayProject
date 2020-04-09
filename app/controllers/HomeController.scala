@@ -21,38 +21,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   }
 
 
-  def products = Action {
-    Ok(views.html.index("Products."))
-  }
-
-  def productsByCat(catId: Int) = Action {
-    Ok(views.html.index("Products from category: "+ catId))
-  }
-
-  def productsBySub(subId: Int) = Action {
-    Ok(views.html.index("Products from subcategory: "+subId))
-  }
-
-  def productDetails(id: Int) = Action {
-    Ok(views.html.index("Product details: "+id))
-  }
-
-  def addProductMenu = Action {
-    Ok(views.html.index("Menu to add a product."))
-  }
-
-  def addProduct = Action {
-    Ok(views.html.index("Adding a product."))
-  }
-
-  def updateProduct = Action {
-    Ok(views.html.index("Updating a product."))
-  }
-
-  def removeProduct = Action {
-    Ok(views.html.index("Removing a product."))
-  }
-
 
   def reviews(productId: Int) = Action {
     Ok(views.html.index("Reviews to product: "+productId))

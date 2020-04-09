@@ -8,7 +8,6 @@ import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
-import scala.concurrent.ExecutionContext
 
 
 class  SubcategoryController @Inject()(subRepo: SubcategoryRepository, categoryRepo: CategoryRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
@@ -41,6 +40,20 @@ class  SubcategoryController @Inject()(subRepo: SubcategoryRepository, categoryR
     podkategorie.map( subcategories => Ok(views.html.subcategories(subcategories, categ)))
 
   }
+
+  def subByCat(catId: Int) = Action.async { implicit request =>
+
+    var categ:Seq[Category] = Seq[Category]()
+    val kategorie = categoryRepo.list().onComplete{
+      case Success(cat) => categ = cat
+      case Failure(_) => print("fail")
+    }
+
+    val podkategorie = subRepo.getByCategory(catId)
+    podkategorie.map( subcategories => Ok(views.html.subByCat(subcategories, categ)))
+
+  }
+
 
   def addSubMenu = Action.async { implicit request: MessagesRequest[AnyContent] =>
     val categories = categoryRepo.list()

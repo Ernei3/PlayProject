@@ -7,31 +7,26 @@ import scala.concurrent.{ Future, ExecutionContext }
 
 @Singleton
 class SubcategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, categoryRepository: CategoryRepository)(implicit ec: ExecutionContext) {
-  private val dbConfig = dbConfigProvider.get[JdbcProfile]
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import profile.api._
 
 
-  private class SubcategoryTable(tag: Tag) extends Table[Subcategory](tag, "subcategory") {
+  class SubcategoryTable(tag: Tag) extends Table[Subcategory](tag, "subcategory") {
 
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def category = column[Int]("category")
-    def category_fk = foreignKey("cat_fk",category, cat)(_.id)
+    private def category_fk = foreignKey("cat_fk",category, cat)(_.id)
 
     def * = (id, name, category) <> ((Subcategory.apply _).tupled, Subcategory.unapply)
 
   }
 
-  /**
-   * The starting point for all queries on the people table.
-   */
-
   import categoryRepository.CategoryTable
 
   private val subcategory = TableQuery[SubcategoryTable]
-
   private val cat = TableQuery[CategoryTable]
 
 

@@ -21,27 +21,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   }
 
 
-
-  def reviews(productId: Int) = Action {
-    Ok(views.html.index("Reviews to product: "+productId))
-  }
-
-  def addReviewMenu = Action {
-    Ok(views.html.index("Menu to add a review."))
-  }
-
-  def addReview = Action {
-    Ok(views.html.index("Adding a review."))
-  }
-
-  def updateReview = Action {
-    Ok(views.html.index("updating a review."))
-  }
-
-  def removeReview = Action {
-    Ok(views.html.index("Removing a review."))
-  }
-
   def wishlist = Action {
     Ok(views.html.index("Wishlist."))
   }

@@ -29,11 +29,13 @@ GET         /updateProductMenu/:id      controllers.ProductController.updateProd
 POST        /updateProduct              controllers.ProductController.updateProduct
 GET         /removeProduct/:id          controllers.ProductController.removeProduct(id: Int)
 
-GET         /reviews/:productId         controllers.HomeController.reviews(productId: Int)
-GET         /addReviewMenu/             controllers.HomeController.addReviewMenu
-POST        /addReview                  controllers.HomeController.addReview
-PUT         /updateReview               controllers.HomeController.updateReview
-DELETE      /removeReview               controllers.HomeController.removeReview
+GET         /reviews/:productId         controllers.ReviewController.reviews(productId: Int)
+GET         /allReviews                 controllers.ReviewController.allReviews
+GET         /addReviewMenu/:productId   controllers.ReviewController.addReviewMenu(productId: Int)
+POST        /addReview/:productId       controllers.ReviewController.addReview(productId: Int)
+GET         /updateReviewMenu/:id       controllers.ReviewController.updateReviewMenu(id: Int)
+POST        /updateReview               controllers.ReviewController.updateReview
+GET         /removeReview/:id           controllers.ReviewController.removeReview(id: Int)
 
 GET         /wishlist                   controllers.HomeController.wishlist
 POST        /addToWishlist              controllers.HomeController.addToWishlist

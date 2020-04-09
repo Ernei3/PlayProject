@@ -21,9 +21,18 @@ CREATE TABLE "product" (
  FOREIGN KEY(subcategory) references subcategory(id)
 );
 
+CREATE TABLE "review" (
+ "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+ "title" VARCHAR NOT NULL,
+ "content" TEXT NOT NULL,
+ "product" INT NOT NULL,
+ FOREIGN KEY(product) references product(id)
+);
+
 
 # --- !Downs
 
 DROP TABLE "category";
 DROP TABLE "subcategory";
 DROP TABLE "product";
+DROP TABLE "review";

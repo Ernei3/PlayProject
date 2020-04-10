@@ -37,10 +37,12 @@ GET         /updateReviewMenu/:id       controllers.ReviewController.updateRevie
 POST        /updateReview               controllers.ReviewController.updateReview
 GET         /removeReview/:id           controllers.ReviewController.removeReview(id: Int)
 
-GET         /wishlist                   controllers.HomeController.wishlist
-POST        /addToWishlist              controllers.HomeController.addToWishlist
-PUT         /updateWishlist             controllers.HomeController.updateWishlist
-DELETE      /removeFromWishlist         controllers.HomeController.removeFromWishlist
+GET         /wishlist/:userId           controllers.WishlistController.wishlist(userId: Int)
+GET         /allWishes                  controllers.WishlistController.allWishes
+GET         /addToWishlistMenu/productId  controllers.WishlistController.addToWishlistMenu(productId: Int)
+POST        /addToWishlist/:productId   controllers.WishlistController.addToWishlist(productId: Int)
+POST        /updateWishlist             controllers.WishlistController.updateWishlist
+GET         /removeFromWishlist/:id     controllers.WishlistController.removeFromWishlist(id: Int)
 
 GET         /basket                     controllers.HomeController.basket
 POST        /addToBasket                controllers.HomeController.addToBasket

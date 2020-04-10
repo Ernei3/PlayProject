@@ -8,6 +8,7 @@
             Error: Category with id @product.subcategory doesn't exist.
         }
         <a href="@controllers.routes.ProductController.productDetails(product.id)">Details</a>
+        <p><a href="@controllers.routes.WishlistController.addToWishlistMenu(product.id)">Add to Wishlist</a></p>
         <a href="@controllers.routes.ProductController.updateProductMenu(product.id)">Edit</a>
         <a href="@controllers.routes.ProductController.removeProduct(product.id)">Delete</a></p>
 }

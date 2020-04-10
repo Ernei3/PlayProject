@@ -20,23 +20,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("This is the main page."))
   }
 
-
-  def wishlist = Action {
-    Ok(views.html.index("Wishlist."))
-  }
-
-  def addToWishlist = Action {
-    Ok(views.html.index("Adding to the wishlist."))
-  }
-
-  def updateWishlist = Action {
-    Ok(views.html.index("Updating the wishlist."))
-  }
-
-  def removeFromWishlist = Action {
-    Ok(views.html.index("Removing from the wishlist."))
-  }
-
   def basket = Action {
     Ok(views.html.index("Basket."))
   }

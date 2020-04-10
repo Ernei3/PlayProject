@@ -29,6 +29,22 @@ CREATE TABLE "review" (
  FOREIGN KEY(product) references product(id)
 );
 
+CREATE TABLE "wishlist" (
+ "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+ "user" INTEGER,
+ "quantity" INT NOT NULL,
+ "product" INT NOT NULL,
+ FOREIGN KEY(product) references product(id)
+);
+
+CREATE TABLE "basket" (
+ "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+ "user" INTEGER,
+ "quantity" INT NOT NULL,
+ "product" INT NOT NULL,
+ FOREIGN KEY(product) references product(id)
+);
+
 
 # --- !Downs
 
@@ -36,3 +52,5 @@ DROP TABLE "category";
 DROP TABLE "subcategory";
 DROP TABLE "product";
 DROP TABLE "review";
+DROP TABLE "wishlist";
+DROP TABLE "basket";

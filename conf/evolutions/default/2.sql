@@ -19,7 +19,7 @@ INSERT INTO "wishlist"("user", "quantity", "product") VALUES (1, 1, 2);
 INSERT INTO "wishlist"("user", "quantity", "product") VALUES (2, 3, 3);
 
 INSERT INTO "basket"("user", "quantity", "product") VALUES (1, 4, 3);
-INSERT INTO "bakset"("user", "quantity", "product") VALUES (2, 1, 2);
+INSERT INTO "basket"("user", "quantity", "product") VALUES (2, 1, 2);
 INSERT INTO "basket"("user", "quantity", "product") VALUES (2, 2, 1);
 
 # --- !Downs

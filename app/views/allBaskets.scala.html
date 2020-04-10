@@ -1,0 +1,20 @@
+@(baskets: Seq[Basket],products: Seq[Product], updateWishForm: Form[UpdateBasketForm])(implicit request: MessagesRequestHeader)
+
+@import helper._
+
+@for(basket <- baskets) {
+    @if(products.exists(_.id == basket.product)){
+        @products.find(_.id == basket.product).get.name;
+    }else {
+        Error: Product with id @basket.product doesn't exist.
+    }
+    @form(routes.BasketController.updateBasket()) {
+        @helper.CSRF.formField
+        <input name="id" id="id" value="@basket.id" type="hidden" />
+        <input name="user" id="user" value="@basket.user" type="hidden" />
+        Quantity:<input type="number" id="quantity" name="quantity" min="1" max="5" value="@basket.quantity">
+        <input name="product" id="product" value="@basket.product" type="hidden" />
+        <input type="submit" value="Update"/>
+    }
+    <a href="@controllers.routes.BasketController.removeFromBasket(basket.id)">Delete</a></p>
+}

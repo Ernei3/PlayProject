@@ -44,10 +44,12 @@ POST        /addToWishlist/:productId   controllers.WishlistController.addToWish
 POST        /updateWishlist             controllers.WishlistController.updateWishlist
 GET         /removeFromWishlist/:id     controllers.WishlistController.removeFromWishlist(id: Int)
 
-GET         /basket                     controllers.HomeController.basket
-POST        /addToBasket                controllers.HomeController.addToBasket
-PUT         /changeQuantity             controllers.HomeController.changeQuantity
-DELETE      /removeFromBasket           controllers.HomeController.removeFromBasket
+GET         /basket/:userId             controllers.BasketController.basket(userId: Int)
+GET         /allBaskets                 controllers.BasketController.allBaskets
+GET         /addToBasketMenu/:productId controllers.BasketController.addToBasketMenu(productId: Int)
+POST        /addToBasket/:productId     controllers.BasketController.addToBasket(productId: Int)
+POST        /updateBasket               controllers.BasketController.updateBasket
+GET         /removeFromBasket/:id       controllers.BasketController.removeFromBasket(id: Int)
 
 GET         /orders                     controllers.HomeController.orders
 GET         /orderDetails/:id           controllers.HomeController.orderDetails(id: Int)

@@ -1,16 +1,16 @@
-@(wishlist: Form[CreateWishForm], productId: Int)(implicit request: MessagesRequestHeader, flash: Flash)
+@(basket: Form[CreateBasketForm], productId: Int)(implicit request: MessagesRequestHeader, flash: Flash)
 
 @import helper._
 
 @flash.get("success").getOrElse("")
 
-@form(routes.WishlistController.addToWishlist(productId)) {
+@form(routes.BasketController.addToBasket(productId)) {
     @helper.CSRF.formField
-    @inputText(wishlist("user"))
+    @inputText(basket("user"))
     Quantity:<input type="number" id="quantity" name="quantity" min="1" max="5" value="1">
     <input name="product" id="product" value="@productId" type="hidden" />
 
     <div class="buttons">
-        <input type="submit" value="Add to Wishlist"/>
+        <input type="submit" value="Add to Basket"/>
     </div>
 }

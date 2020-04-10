@@ -20,21 +20,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("This is the main page."))
   }
 
-  def basket = Action {
-    Ok(views.html.index("Basket."))
-  }
 
-  def addToBasket = Action {
-    Ok(views.html.index("Adding to basket."))
-  }
-
-  def changeQuantity = Action {
-    Ok(views.html.index("Changing the quantity in basket."))
-  }
-
-  def removeFromBasket = Action {
-    Ok(views.html.index("Removing from basket."))
-  }
 
   def orders = Action {
     Ok(views.html.index("Orders' list."))

@@ -1,0 +1,32 @@
+@(order: Form[UpdateOrderForm], status: String)(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.OrderController.updateOrder()) {
+    @helper.CSRF.formField
+    <input name="id" id="id" value="@order("id").value" type="hidden" />
+    @inputText(order("user"))
+    <select name="status" id="status">
+    @if(status=="Created") {
+        <option value="Created" selected>Created</option>
+    }else{
+        <option value="Created">Created</option>
+    }
+    @if(status=="Accepted") {
+        <option value="Accepted" selected>Accepted</option>
+    }else{
+        <option value="Accepted">Accepted</option>
+    }
+    @if(status=="Delivered") {
+        <option value="Delivered" selected>Delivered</option>
+    }else{
+        <option value="Delivered">Delivered</option>
+    }
+    </select>
+
+    <div class="buttons">
+        <input type="submit" value="Update Order"/>
+    </div>
+}

@@ -51,11 +51,13 @@ POST        /addToBasket/:productId     controllers.BasketController.addToBasket
 POST        /updateBasket               controllers.BasketController.updateBasket
 GET         /removeFromBasket/:id       controllers.BasketController.removeFromBasket(id: Int)
 
-GET         /orders                     controllers.HomeController.orders
-GET         /orderDetails/:id           controllers.HomeController.orderDetails(id: Int)
-POST        /addOrder                   controllers.HomeController.addOrder
-PUT         /updateOrder                controllers.HomeController.updateOrder
-DELETE      /removeOrder                controllers.HomeController.removeOrder
+GET         /allOrders                  controllers.OrderController.allOrders
+GET         /orders/:userId             controllers.OrderController.orders(userId: Int)
+GET         /orderDetails/:id           controllers.OrderController.orderDetails(id: Int)
+GET         /addOrder/:userId           controllers.OrderController.addOrder(userId: Int)
+GET         /updateOrder/:id            controllers.OrderController.updateOrderMenu(id: Int)
+POST        /updateOrder                controllers.OrderController.updateOrder
+GET         /removeOrder/:userId        controllers.OrderController.removeOrder(userId: Int)
 
 GET         /orderedProducts/:orderId   controllers.HomeController.orderedProducts(orderId: Int)
 POST        /addToOrder                 controllers.HomeController.addToOrder

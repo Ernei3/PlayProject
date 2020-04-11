@@ -45,6 +45,12 @@ CREATE TABLE "basket" (
  FOREIGN KEY(product) references product(id)
 );
 
+CREATE TABLE "order" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "user" INTEGER,
+  "status" TEXT NOT NULL
+);
+
 
 # --- !Downs
 
@@ -54,3 +60,4 @@ DROP TABLE "product";
 DROP TABLE "review";
 DROP TABLE "wishlist";
 DROP TABLE "basket";
+DROP TABLE "order";

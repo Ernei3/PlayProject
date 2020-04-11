@@ -22,6 +22,10 @@ INSERT INTO "basket"("user", "quantity", "product") VALUES (1, 4, 3);
 INSERT INTO "basket"("user", "quantity", "product") VALUES (2, 1, 2);
 INSERT INTO "basket"("user", "quantity", "product") VALUES (2, 2, 1);
 
+
+INSERT INTO "order"("user","status") VALUES (1, "Delivered");
+INSERT INTO "order"("user","status") VALUES (2, "Accepted");
+
 # --- !Downs
 
 DELETE FROM "category" WHERE name="clothes";
@@ -45,3 +49,6 @@ DELETE FROM "wishlist" WHERE id=3;
 DELETE FROM "basket" WHERE id=1;
 DELETE FROM "basket" WHERE id=2;
 DELETE FROM "basket" WHERE id=3;
+
+DELETE "order" WHERE id=1;
+DELETE "order" WHERE id=2;

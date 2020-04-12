@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.{Order, OrderRepository}
+import models.{Basket, BasketRepository, Order, OrderRepository, Product, ProductRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
@@ -13,7 +13,8 @@ import scala.util.{Failure, Success}
 
 
 @Singleton
-class OrderController @Inject()(orderRepo:OrderRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRepository, basketRepo:BasketRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+
 
   val updateOrderForm: Form[UpdateOrderForm] = Form {
     mapping(
@@ -42,9 +43,27 @@ class OrderController @Inject()(orderRepo:OrderRepository, cc: MessagesControlle
   }
 
   def addOrder(userId: Int) = Action.async { implicit request =>
+    var prod:Seq[Product] = Seq[Product]()
+    val produkty = productRepo.list().onComplete{
+      case Success(p) => prod = p
+      case Failure(_) => print("fail")
+    }
+
+    var bask:Seq[Basket] = Seq[Basket]()
+    val koszyk = basketRepo.getByUser(userId).onComplete{
+      case Success(b) => bask = b
+      case Failure(_) => print("fail")
+    }
 
     val zamowienia = orderRepo.create(userId, "Created")
-    zamowienia.map(orders => Ok(views.html.index("Created an order with id: " + orders.id)))
+    var priceSum = 0
+    for(ba <- bask) {
+      if(prod.exists(_.id == ba.product)){
+        priceSum += prod.find(_.id == ba.product).get.price * ba.quantity
+      }
+    }
+
+    zamowienia.map(orders => Ok(views.html.addOrderedProductsMenu(orders.id, prod, bask, priceSum, userId)))
   }
 
   def updateOrderMenu(id: Integer) = Action.async { implicit request =>

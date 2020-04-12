@@ -68,7 +68,7 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
       },
       basket => {
         basketRepo.create(basket.user, basket.quantity, basket.product).map { _ =>
-          Redirect(routes.BasketController.addToBasketMenu(productId)).flashing("success" -> "product added to wishlist")
+          Redirect(routes.BasketController.addToBasketMenu(productId)).flashing("success" -> "product added to basket")
         }
       }
     )

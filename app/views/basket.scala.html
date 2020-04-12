@@ -6,7 +6,8 @@
 
 @for(basket <- baskets) {
     @if(products.exists(_.id == basket.product)){
-        @products.find(_.id == basket.product).get.name;
+        @products.find(_.id == basket.product).get.name -
+        @products.find(_.id == basket.product).get.price $
     }else {
         Error: Product with id @basket.product doesn't exist.
     }

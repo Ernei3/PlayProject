@@ -2,10 +2,11 @@
 
 @for(product <- products) {
     <p><b>@product.name</b>
+    <b>@product.price $; </b>
         @if(subcategories.exists(_.id == product.subcategory)){
             @subcategories.find(_.id == product.subcategory).get.name
         }else {
-            Error: Category with id @product.subcategory doesn't exist.
+            Error: Subcategory with id @product.subcategory doesn't exist.
         }
         <a href="@controllers.routes.ProductController.productDetails(product.id)">Details</a>
         <p><a href="@controllers.routes.BasketController.addToBasketMenu(product.id)">Add to Basket</a></p>

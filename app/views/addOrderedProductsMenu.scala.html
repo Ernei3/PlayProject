@@ -1,0 +1,26 @@
+@(orderId: Int, products: Seq[Product], baskets: Seq[Basket], priceSum: Int, userId: Int)(implicit request: MessagesRequestHeader)
+
+
+@import helper._
+
+<p>Are you sure you want to buy the following?</p>
+
+@for(basket <- baskets) {
+    <p>@if(products.exists(_.id == basket.product)) {
+        @products.find(_.id == basket.product).get.name;
+        @products.find(_.id == basket.product).get.price $
+    } else {
+        Error: Product with id @basket.product doesn't exist.
+    }
+        @basket.quantity</p>
+}
+
+    <p>Sum: @priceSum</p>
+
+<p><a href="@controllers.routes.OrderController.removeOrder(orderId)">Drop</a></p>
+@form(routes.OrderProdController.addToOrder()) {
+    @helper.CSRF.formField
+    <input name="orderId" id="orderId" value="@orderId" type="hidden" />
+    <input name="userId" id="userId" value="@userId" type="hidden" />
+    <input type="submit" value="Buying"/>
+}

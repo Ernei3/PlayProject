@@ -19,6 +19,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
     mapping(
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
+      "price" -> number,
       "subcategory" -> number
     )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
@@ -28,6 +29,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
       "id" -> number,
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
+      "price" -> number,
       "subcategory" -> number
     )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
@@ -82,7 +84,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
         )
       },
       product => {
-        productsRepo.create(product.name, product.description, product.subcategory).map { _ =>
+        productsRepo.create(product.name, product.description, product.price, product.subcategory).map { _ =>
           Redirect(routes.ProductController.addProductMenu()).flashing("success" -> "product created")
         }
       }
@@ -98,7 +100,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
 
     val produkt = productsRepo.getById(id)
     produkt.map(product => {
-      val prodForm = updateProductForm.fill(UpdateProductForm(product.id, product.name, product.description, product.subcategory))
+      val prodForm = updateProductForm.fill(UpdateProductForm(product.id, product.name, product.description, product.price, product.subcategory))
       Ok(views.html.updateProductMenu(prodForm, subcateg))
     })
   }
@@ -117,7 +119,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
         )
       },
       product => {
-        productsRepo.update(product.id, Product(product.id, product.name, product.description, product.subcategory)).map { _ =>
+        productsRepo.update(product.id, Product(product.id, product.name, product.description, product.price, product.subcategory)).map { _ =>
           Redirect(routes.ProductController.updateProductMenu(product.id)).flashing("success" -> "product updated")
         }
       }
@@ -132,5 +134,5 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
 
 }
 
-case class CreateProductForm(name: String, description: String, subcategory: Int)
-case class UpdateProductForm(id: Int, name: String, description: String, subcategory: Int)
+case class CreateProductForm(name: String, description: String, price: Int, subcategory: Int)
+case class UpdateProductForm(id: Int, name: String, description: String, price: Int, subcategory: Int)

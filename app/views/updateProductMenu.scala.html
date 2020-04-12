@@ -8,6 +8,7 @@
   @helper.CSRF.formField
   <input name="id" id="id" value="@product("id").value" type="hidden" />
   @inputText(product("name"))
+  @inputText(product("price"))
   @inputText(product("description"))
 
   <select name="subcategory" id="subcategory">

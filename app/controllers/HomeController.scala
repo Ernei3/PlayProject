@@ -22,23 +22,13 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
 
 
-  def orderedProducts(orderId: Int) = Action {
-    Ok(views.html.index("Products from the order: "+orderId))
-  }
-  def addToOrder = Action {
-    Ok(views.html.index("Adding a product to the order."))
-  }
-  def changeOrdered = Action {
-    Ok(views.html.index("Changing a product from the order."))
-  }
-  def removeOrdered = Action {
-    Ok(views.html.index("Removing products from the order."))
-  }
-
-
 
   def orderAddress(orderId: Int) = Action {
-    Ok(views.html.index("Address of the order: "+orderId))
+    Ok(views.html.index("Address of the order:" + orderId))
+  }
+
+  def addAddressMenu(orderId: Int, userId: Int, productCount: Int) = Action {
+    Ok(views.html.index("Address Menu for order and user: "+ orderId + " " + userId + " with "+ productCount+" products."))
   }
 
   def addAddress = Action {

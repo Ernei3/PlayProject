@@ -18,10 +18,11 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, sub
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def description = column[String]("description")
+    def price = column[Int]("price")
     def subcategory = column[Int]("subcategory")
     private def subcategory_fk = foreignKey("sub_fk",subcategory, sub)(_.id)
 
-    def * = (id, name, description, subcategory) <> ((Product.apply _).tupled, Product.unapply)
+    def * = (id, name, description, price, subcategory) <> ((Product.apply _).tupled, Product.unapply)
 
   }
 
@@ -31,11 +32,11 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, sub
   private val sub = TableQuery[SubcategoryTable]
 
 
-  def create(name: String, description: String, subcategory: Int): Future[Product] = db.run {
-    (product.map(p => (p.name, p.description,p.subcategory))
+  def create(name: String, description: String, price: Int, subcategory: Int): Future[Product] = db.run {
+    (product.map(p => (p.name, p.description, p.price, p.subcategory))
       returning product.map(_.id)
-      into {case ((name,description,subcategory),id) => Product(id,name, description,subcategory)}
-      ) += (name, description,subcategory)
+      into {case ((name,description,price,subcategory),id) => Product(id,name,description,price,subcategory)}
+      ) += (name,description,price,subcategory)
   }
 
 

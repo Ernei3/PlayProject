@@ -57,14 +57,17 @@ GET         /orderDetails/:id           controllers.OrderController.orderDetails
 GET         /addOrder/:userId           controllers.OrderController.addOrder(userId: Int)
 GET         /updateOrder/:id            controllers.OrderController.updateOrderMenu(id: Int)
 POST        /updateOrder                controllers.OrderController.updateOrder
-GET         /removeOrder/:userId        controllers.OrderController.removeOrder(userId: Int)
+GET         /removeOrder/:id            controllers.OrderController.removeOrder(id: Int)
 
-GET         /orderedProducts/:orderId   controllers.HomeController.orderedProducts(orderId: Int)
-POST        /addToOrder                 controllers.HomeController.addToOrder
-PUT         /changeOrdered              controllers.HomeController.changeOrdered
-DELETE      /removeOrdered              controllers.HomeController.removeOrdered
+GET         /allOrderedProducts         controllers.OrderProdController.allOrderedProducts
+GET         /orderedProducts/:orderId   controllers.OrderProdController.orderedProducts(orderId: Int)
+POST        /addToOrder                 controllers.OrderProdController.addToOrder
+GET         /changeOrderedMenu/:id      controllers.OrderProdController.changeOrderedMenu(id: Int)
+POST        /changeOrdered              controllers.OrderProdController.changeOrdered
+GET         /removeOrdered/:id          controllers.OrderProdController.removeOrdered(id: Int)
 
 GET         /orderAddress/:orderId      controllers.HomeController.orderAddress(orderId: Int)
+GET         /addAddressMenu/:orderId,:userId,:productCount             controllers.HomeController.addAddressMenu(orderId: Int, userId: Int, productCount: Int)
 POST        /addAddress                 controllers.HomeController.addAddress
 PUT         /changeAddress              controllers.HomeController.changeAddress
 DELETE      /removeAddress              controllers.HomeController.removeAddress

@@ -9,6 +9,7 @@
     @helper.CSRF.formField
     @inputText(product("name"))
     @inputText(product("description"))
+    @inputText(product("price"))
 
     <select name="subcategory" id="subcategory">
     @for(sub <- subcategory){

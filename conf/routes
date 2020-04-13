@@ -66,11 +66,13 @@ GET         /changeOrderedMenu/:id      controllers.OrderProdController.changeOr
 POST        /changeOrdered              controllers.OrderProdController.changeOrdered
 GET         /removeOrdered/:id          controllers.OrderProdController.removeOrdered(id: Int)
 
-GET         /orderAddress/:orderId      controllers.HomeController.orderAddress(orderId: Int)
-GET         /addAddressMenu/:orderId,:userId,:productCount             controllers.HomeController.addAddressMenu(orderId: Int, userId: Int, productCount: Int)
-POST        /addAddress                 controllers.HomeController.addAddress
-PUT         /changeAddress              controllers.HomeController.changeAddress
-DELETE      /removeAddress              controllers.HomeController.removeAddress
+GET         /allAddresses               controllers.OrderAdController.allAddresses
+GET         /orderAddress/:orderId      controllers.OrderAdController.orderAddress(orderId: Int)
+GET         /addAddressMenu/:orderId    controllers.OrderAdController.addAddressMenu(orderId: Int)
+POST        /addAddress                 controllers.OrderAdController.addAddress
+GET         /changeAddressMenu/:id      controllers.OrderAdController.changeAddressMenu(id: Int)
+POST        /changeAddress              controllers.OrderAdController.changeAddress
+GET         /removeAddress/:id          controllers.OrderAdController.removeAddress(id: Int)
 
 GET         /payment/:orderId           controllers.HomeController.payment(orderId: Int)
 POST        /sendPayment                controllers.HomeController.sendPayment

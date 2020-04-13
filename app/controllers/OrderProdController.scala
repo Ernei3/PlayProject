@@ -64,15 +64,13 @@ class OrderProdController @Inject()(orderProdRepo:OrderProdRepository, orderRepo
           val koszyk = basketRepo.getByUser(ordered.userId)
 
           koszyk.map { bask =>
-            var productCount = 0
             for(ba <- bask) {
               if(prod.exists(_.id == ba.product)){
                 orderProdRepo.create(prod.find(_.id == ba.product).get.name, prod.find(_.id == ba.product).get.price, ba.quantity, ordered.orderId)
-                productCount += 1
                 basketRepo.delete(ba.id)
               }
             }
-            Redirect(routes.HomeController.addAddressMenu(ordered.orderId, ordered.userId, productCount))
+            Redirect(routes.OrderAdController.addAddressMenu(ordered.orderId))
           }
 
 

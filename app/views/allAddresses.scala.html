@@ -1,0 +1,12 @@
+@(orderads: Seq[OrderAd])
+
+@for(orderad <- orderads) {
+    <p>@orderad.country
+        @orderad.city
+        @orderad.street
+        @orderad.number
+        Order: @orderad.order
+    </p>
+    <a href="@controllers.routes.OrderAdController.changeAddressMenu(orderad.id)">Edit</a>
+    <a href="@controllers.routes.OrderAdController.removeAddress(orderad.id)">Delete</a></p>
+}

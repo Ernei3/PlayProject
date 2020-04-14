@@ -1,0 +1,17 @@
+@(payment: Form[AddPaymentForm], orderId: Int)(implicit request: MessagesRequestHeader)
+
+@import helper._
+
+    Card data:
+
+@form(routes.PaymentController.sendPayment()) {
+    @helper.CSRF.formField
+    @inputText(payment("number"))
+    @inputText(payment("name"))
+    @inputText(payment("date"))
+    @inputText(payment("code"))
+    <input name="order" id="order" value="@orderId" type="hidden" />
+    <div class="buttons">
+        <input type="submit" value="Pay"/>
+    </div>
+}

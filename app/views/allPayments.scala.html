@@ -1,0 +1,12 @@
+@(payments: Seq[Payment])
+
+@for(payment <- payments) {
+    <p>@payment.number
+        @payment.name
+        @payment.date
+        @payment.code
+        Order: @payment.order
+    </p>
+    <a href="@controllers.routes.PaymentController.changePaymentMenu(payment.id)">Edit</a>
+    <a href="@controllers.routes.PaymentController.removePayment(payment.id)">Delete</a></p>
+}

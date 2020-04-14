@@ -3,12 +3,12 @@
 @import helper._
 
 @for(basket <- baskets) {
+    <p><b>User @basket.user</b> -
     @if(products.exists(_.id == basket.product)){
         @products.find(_.id == basket.product).get.name;
     }else {
         Error: Product with id @basket.product doesn't exist.
     }
-    <p>User @basket.user</p>
     @form(routes.BasketController.updateBasket()) {
         @helper.CSRF.formField
         <input name="id" id="id" value="@basket.id" type="hidden" />

@@ -6,7 +6,8 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -39,21 +40,16 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
 
 
   def orderDetails(id: Int) = Action {
-    Ok(views.html.index("Order details of: "+id))
+    Ok(views.html.orderDetails(id))
   }
 
   def addOrder(userId: Int) = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
 
-    var bask:Seq[Basket] = Seq[Basket]()
-    val koszyk = basketRepo.getByUser(userId).onComplete{
-      case Success(b) => bask = b
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val koszyk = basketRepo.getByUser(userId)
+
+    val prod = Await.result(produkty, Duration.Inf)
+    val bask = Await.result(koszyk, Duration.Inf)
 
     val zamowienia = orderRepo.create(userId, "Created")
     var priceSum = 0
@@ -94,6 +90,11 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
   def removeOrder(id: Int) = Action {
     orderRepo.delete(id)
     Redirect("/allOrders")
+  }
+
+  def dropOrder(id: Int) = Action {
+    orderRepo.delete(id)
+    Redirect("/categories")
   }
 
 

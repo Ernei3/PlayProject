@@ -71,6 +71,16 @@ CREATE TABLE "orderad" (
  FOREIGN KEY("order") references "order"(id)
 );
 
+CREATE TABLE "payment" (
+   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   "number" VARCHAR NOT NULL,
+   "name" VARCHAR NOT NULL,
+   "date" VARCHAR NOT NULL,
+   "code" INT NOT NULL,
+   "order" INT NOT NULL,
+   FOREIGN KEY("order") references "order"(id)
+);
+
 
 # --- !Downs
 
@@ -83,3 +93,4 @@ DROP TABLE "basket";
 DROP TABLE "order";
 DROP TABLE "orderprod";
 DROP TABLE "orderad";
+DROP TABLE "payment";

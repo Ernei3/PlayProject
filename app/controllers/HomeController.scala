@@ -22,23 +22,4 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
 
 
-
-
-  def payment(orderId: Int) = Action {
-    Ok(views.html.index("Payment to the order: "+orderId))
-  }
-
-  def sendPayment = Action {
-    Ok(views.html.index("Sending payment."))
-  }
-
-  def changePayment = Action {
-    Ok(views.html.index("Changing payment."))
-  }
-
-  def removePayment = Action {
-    Ok(views.html.index("Removing payment."))
-  }
-
-
 }

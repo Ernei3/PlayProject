@@ -58,6 +58,7 @@ GET         /addOrder/:userId           controllers.OrderController.addOrder(use
 GET         /updateOrder/:id            controllers.OrderController.updateOrderMenu(id: Int)
 POST        /updateOrder                controllers.OrderController.updateOrder
 GET         /removeOrder/:id            controllers.OrderController.removeOrder(id: Int)
+GET         /dropOrder/:id              controllers.OrderController.dropOrder(id: Int)
 
 GET         /allOrderedProducts         controllers.OrderProdController.allOrderedProducts
 GET         /orderedProducts/:orderId   controllers.OrderProdController.orderedProducts(orderId: Int)
@@ -74,10 +75,13 @@ GET         /changeAddressMenu/:id      controllers.OrderAdController.changeAddr
 POST        /changeAddress              controllers.OrderAdController.changeAddress
 GET         /removeAddress/:id          controllers.OrderAdController.removeAddress(id: Int)
 
-GET         /payment/:orderId           controllers.HomeController.payment(orderId: Int)
-POST        /sendPayment                controllers.HomeController.sendPayment
-PUT         /changePayment              controllers.HomeController.changePayment
-DELETE      /removePayment              controllers.HomeController.removePayment
+GET         /allPayments                controllers.PaymentController.allPayments
+GET         /payment/:orderId           controllers.PaymentController.payment(orderId: Int)
+GET         /addPayment/:orderId        controllers.PaymentController.addPayment(orderId: Int)
+POST        /sendPayment                controllers.PaymentController.sendPayment
+GET         /changePayment/:id          controllers.PaymentController.changePaymentMenu(id: Int)
+POST        /changePayment              controllers.PaymentController.changePayment
+GET         /removePayment/:id          controllers.PaymentController.removePayment(id: Int)
 
 
 

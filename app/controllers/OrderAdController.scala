@@ -57,12 +57,12 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
     createAddressForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(
-          BadRequest(views.html.index("Error while adding the address to product."))
+          BadRequest(views.html.index("Error while adding the address to order."))
         )
       },
       orderad => {
         orderAdRepo.create(orderad.country, orderad.city, orderad.street, orderad.number, orderad.order).map { _ =>
-          Redirect(routes.HomeController.payment(orderad.order))
+          Redirect(routes.PaymentController.addPayment(orderad.order))
         }
       }
     )

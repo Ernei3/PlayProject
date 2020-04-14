@@ -1,0 +1,11 @@
+@(payments: Seq[Payment], orderId: Int)
+
+<p>Payment for order @orderId</p>
+
+@for(payment <- payments) {
+    <p>@payment.number
+        @payment.name
+        @payment.date
+        @payment.code
+    </p>
+}

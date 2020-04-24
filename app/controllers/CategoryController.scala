@@ -5,6 +5,7 @@ import models.{Category, CategoryRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.libs.json._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -78,12 +79,41 @@ class  CategoryController @Inject()(categoryRepo: CategoryRepository, cc: Messag
     )
   }
 
-
-
   def removeCategory(id: Int) = Action {
     categoryRepo.delete(id)
     Redirect("/categories")
   }
+
+
+
+  def getCategoriesJson = Action.async { implicit request =>
+    val kategorie = categoryRepo.list()
+    kategorie.map( categories => Ok(Json.toJson(categories)))
+  }
+
+  def addCategoryJson: Action[AnyContent] = Action { implicit request =>
+    var category:Category = request.body.asJson.get.as[Category]
+    categoryRepo.create(category.name)
+    Redirect("/categories")
+  }
+
+  def updateCategoryMenuJson(id: Integer) = Action.async { implicit request =>
+    val kategoria = categoryRepo.getById(id)
+    kategoria.map(category => Ok(Json.toJson(category)))
+  }
+
+  def updateCategoryJson = Action { implicit request =>
+    var category:Category = request.body.asJson.get.as[Category]
+    categoryRepo.update(category.id, Category(category.id, category.name))
+    Redirect("/categories")
+  }
+
+  def removeCategoryJson = Action { implicit request =>
+    var category:Category = request.body.asJson.get.as[Category]
+    categoryRepo.delete(category.id)
+    Redirect("/categories")
+  }
+
 
 }
 

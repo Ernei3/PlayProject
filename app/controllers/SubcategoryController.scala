@@ -5,8 +5,10 @@ import models.{Category, CategoryRepository, Subcategory, SubcategoryRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.libs.json._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -43,14 +45,11 @@ class  SubcategoryController @Inject()(subRepo: SubcategoryRepository, categoryR
 
   def subByCat(catId: Int) = Action.async { implicit request =>
 
-    var categ:Seq[Category] = Seq[Category]()
-    val kategorie = categoryRepo.list().onComplete{
-      case Success(cat) => categ = cat
-      case Failure(_) => print("fail")
-    }
+    val kategoria = categoryRepo.getById(catId)
 
     val podkategorie = subRepo.getByCategory(catId)
-    podkategorie.map( subcategories => Ok(views.html.subByCat(subcategories, categ)))
+    val categ = Await.result(kategoria, Duration.Inf)
+    podkategorie.map( subcategories => Ok(views.html.subByCat(subcategories, categ.name)))
 
   }
 
@@ -120,6 +119,56 @@ class  SubcategoryController @Inject()(subRepo: SubcategoryRepository, categoryR
 
   def removeSub(id: Int) = Action {
     subRepo.delete(id)
+    Redirect("/subcategories")
+  }
+
+
+
+  def getSubcategoriesJson = Action.async { implicit request =>
+    var categ:Seq[Category] = Seq[Category]()
+    val kategorie = categoryRepo.list().onComplete{
+      case Success(cat) => categ = cat
+      case Failure(_) => print("fail")
+    }
+
+    val podkategorie = subRepo.list()
+    podkategorie.map( subcategories => Ok(Json.toJson(subcategories, categ)))
+  }
+
+  def subByCatJson(catId: Int) = Action.async { implicit request =>
+    val kategoria = categoryRepo.getById(catId)
+    val categ = Await.result(kategoria, Duration.Inf)
+
+    val podkategorie = subRepo.getByCategory(catId)
+    podkategorie.map( subcategories => Ok(Json.toJson(subcategories, categ)))
+  }
+
+  def addSubcategoryJson: Action[AnyContent] = Action { implicit request =>
+    var subcat:Subcategory = request.body.asJson.get.as[Subcategory]
+    subRepo.create(subcat.name, subcat.category)
+    Redirect("/subcategories")
+  }
+
+  def updateSubcategoryMenuJson(id: Int) = Action.async { implicit request =>
+    var categ:Seq[Category] = Seq[Category]()
+    val kategorie = categoryRepo.list().onComplete{
+      case Success(cat) => categ = cat
+      case Failure(_) => print("fail")
+    }
+
+    val podkategoria = subRepo.getById(id)
+    podkategoria.map( subcategory => Ok(Json.toJson(subcategory, categ)))
+  }
+
+  def updateSubcategoryJson: Action[AnyContent] = Action { implicit request =>
+    var sub:Subcategory = request.body.asJson.get.as[Subcategory]
+    subRepo.update(sub.id, Subcategory(sub.id, sub.name, sub.category))
+    Redirect("/subcategories")
+  }
+
+  def removeSubcategoryJson: Action[AnyContent] = Action { implicit request =>
+    var sub:Subcategory = request.body.asJson.get.as[Subcategory]
+    subRepo.delete(sub.id)
     Redirect("/subcategories")
   }
 

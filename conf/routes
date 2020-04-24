@@ -5,29 +5,55 @@
 
 GET     /                           controllers.HomeController.index
 
-GET         /categories                 controllers.CategoryController.categories
-GET         /addCategoryMenu            controllers.CategoryController.addCategoryMenu
-POST        /addCategory                controllers.CategoryController.addCategory
-GET         /updateCategoryMenu/:id     controllers.CategoryController.updateCategoryMenu(id: Int)
-POST        /updateCategory             controllers.CategoryController.updateCategory
-GET         /removeCategory/:id         controllers.CategoryController.removeCategory(id: Int)
+GET         /categories                     controllers.CategoryController.categories
+GET         /addCategoryMenu                controllers.CategoryController.addCategoryMenu
+POST        /addCategory                    controllers.CategoryController.addCategory
+GET         /updateCategoryMenu/:id         controllers.CategoryController.updateCategoryMenu(id: Int)
+POST        /updateCategory                 controllers.CategoryController.updateCategory
+GET         /removeCategory/:id             controllers.CategoryController.removeCategory(id: Int)
 
-GET         /subcategories              controllers.SubcategoryController.subcategories
-GET         /subByCat/:catId            controllers.SubcategoryController.subByCat(catId :Int)
-GET         /addSubMenu                 controllers.SubcategoryController.addSubMenu
-POST        /addSub                     controllers.SubcategoryController.addSub
-GET         /updateSubMenu/:id          controllers.SubcategoryController.updateSubMenu(id: Int)
-POST        /updateSub                  controllers.SubcategoryController.updateSub
-GET         /removeSub/:id              controllers.SubcategoryController.removeSub(id: Int)
+GET         /categoriesjson                 controllers.CategoryController.getCategoriesJson
+POST        /addCategoryJson                controllers.CategoryController.addCategoryJson
+GET         /updateCategoryMenuJson/:id     controllers.CategoryController.updateCategoryMenuJson(id: Int)
+PUT         /updateCategoryJson             controllers.CategoryController.updateCategoryJson
+DELETE      /removeCategoryJson             controllers.CategoryController.removeCategoryJson
 
-GET         /products                   controllers.ProductController.products
-GET         /productsBySub/:subId        controllers.ProductController.productsBySub(subId: Int)
-GET         /productDetails/:id         controllers.ProductController.productDetails(id: Int)
-GET         /addProductMenu             controllers.ProductController.addProductMenu
-POST        /addProduct                 controllers.ProductController.addProduct
-GET         /updateProductMenu/:id      controllers.ProductController.updateProductMenu(id: Int)
-POST        /updateProduct              controllers.ProductController.updateProduct
-GET         /removeProduct/:id          controllers.ProductController.removeProduct(id: Int)
+
+
+GET         /subcategories                  controllers.SubcategoryController.subcategories
+GET         /subByCat/:catId                controllers.SubcategoryController.subByCat(catId :Int)
+GET         /addSubMenu                     controllers.SubcategoryController.addSubMenu
+POST        /addSub                         controllers.SubcategoryController.addSub
+GET         /updateSubMenu/:id              controllers.SubcategoryController.updateSubMenu(id: Int)
+POST        /updateSub                      controllers.SubcategoryController.updateSub
+GET         /removeSub/:id                  controllers.SubcategoryController.removeSub(id: Int)
+
+GET         /subcategoriesJson              controllers.SubcategoryController.getSubcategoriesJson
+GET         /subByCatJson/:catId            controllers.SubcategoryController.subByCatJson(catId :Int)
+POST        /addSubcategoryJson             controllers.SubcategoryController.addSubcategoryJson
+GET         /updateSubcategoryMenuJson/:id  controllers.SubcategoryController.updateSubcategoryMenuJson(id: Int)
+PUT         /updateSubcategoryJson          controllers.SubcategoryController.updateSubcategoryJson
+DELETE      /removeSubcategoryJson          controllers.SubcategoryController.removeSubcategoryJson
+
+
+
+GET         /products                       controllers.ProductController.products
+GET         /productsBySub/:subId           controllers.ProductController.productsBySub(subId: Int)
+GET         /productDetails/:id             controllers.ProductController.productDetails(id: Int)
+GET         /addProductMenu                 controllers.ProductController.addProductMenu
+POST        /addProduct                     controllers.ProductController.addProduct
+GET         /updateProductMenu/:id          controllers.ProductController.updateProductMenu(id: Int)
+POST        /updateProduct                  controllers.ProductController.updateProduct
+GET         /removeProduct/:id              controllers.ProductController.removeProduct(id: Int)
+
+GET         /productsJson                   controllers.ProductController.getProductsJson
+GET         /productsBySubJson/:subId       controllers.ProductController.productsBySubJson(subId: Int)
+GET         /productDetailsJson/:id         controllers.ProductController.productDetailsJson(id: Int)
+POST        /addProductJson                 controllers.ProductController.addProductJson
+GET         /updateProductMenuJson/:id      controllers.ProductController.updateProductMenuJson(id: Int)
+PUT         /updateProductJson              controllers.ProductController.updateProductJson
+DELETE      /removeProductJson              controllers.ProductController.removeProductJson
+
 
 GET         /reviews/:productId         controllers.ReviewController.reviews(productId: Int)
 GET         /allReviews                 controllers.ReviewController.allReviews

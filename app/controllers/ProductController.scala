@@ -1,12 +1,14 @@
 package controllers
 
 import javax.inject._
-import models.{Subcategory, SubcategoryRepository, Product, ProductRepository}
+import models.{Product, ProductRepository, Subcategory, SubcategoryRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.libs.json._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -47,13 +49,10 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
 
 
   def productsBySub(subId: Int) = Action.async { implicit request =>
-    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
-    val podkategorie = subRepo.list().onComplete{
-      case Success(sub) => subcateg = sub
-      case Failure(_) => print("fail")
-    }
 
+    val podkategoria = subRepo.getById(subId)
     val produkty = productsRepo.getBySub(subId)
+    val subcateg = Await.result(podkategoria, Duration.Inf)
     produkty.map( products => Ok(views.html.productsBySub(products, subcateg)))
   }
 
@@ -128,6 +127,66 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
 
   def removeProduct(id: Int) = Action {
     productsRepo.delete(id)
+    Redirect("/products")
+  }
+
+
+
+
+  def getProductsJson: Action[AnyContent] = Action.async { implicit request =>
+    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
+    val podkategorie = subRepo.list().onComplete{
+      case Success(sub) => subcateg = sub
+      case Failure(_) => print("fail")
+    }
+
+    val produkty = productsRepo.list()
+    produkty.map( products => Ok(Json.toJson(products, subcateg)))
+  }
+
+  def productsBySubJson(subId: Int) = Action.async { implicit request =>
+
+    val podkategoria = subRepo.getById(subId)
+    val produkty = productsRepo.getBySub(subId)
+    val subcateg = Await.result(podkategoria, Duration.Inf)
+    produkty.map( products => Ok(Json.toJson(products, subcateg)))
+  }
+
+  def productDetailsJson(id: Int) = Action.async { implicit request =>
+    val produkt = productsRepo.getByIdOption(id)
+    produkt.map(product => product match {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => Redirect(routes.ProductController.getProductsJson())
+    })
+  }
+
+  def addProductJson: Action[AnyContent] = Action { implicit request =>
+    var product:Product = request.body.asJson.get.as[Product]
+    productsRepo.create(product.name, product.description, product.price, product.subcategory)
+    Redirect("/products")
+  }
+
+  def updateProductMenuJson(id: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
+    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
+    val subcategories = subRepo.list().onComplete{
+      case Success(sub) => subcateg = sub
+      case Failure(_) => print("fail")
+    }
+
+    val produkt = productsRepo.getById(id)
+    produkt.map(product => Ok(Json.toJson(product, subcateg)))
+  }
+
+  def updateProductJson: Action[AnyContent] = Action { implicit request =>
+    var product:Product = request.body.asJson.get.as[Product]
+    productsRepo.update(product.id, Product(product.id, product.name, product.description, product.price, product.subcategory))
+    Redirect("/products")
+  }
+
+
+  def removeProductJson: Action[AnyContent] = Action { implicit request =>
+    var product:Product = request.body.asJson.get.as[Product]
+    productsRepo.delete(product.id)
     Redirect("/products")
   }
 

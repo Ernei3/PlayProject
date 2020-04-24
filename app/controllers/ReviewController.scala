@@ -5,8 +5,10 @@ import models.{Product, ProductRepository, Review, ReviewRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.libs.json._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -45,14 +47,11 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
   }
 
   def reviews(productId: Int) = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkt = productRepo.getById(productId)
 
     val recenzje = reviewRepo.getByProduct(productId)
-    recenzje.map( reviews => Ok(views.html.reviews(reviews, prod, productId)))
+    val product = Await.result(produkt, Duration.Inf)
+    recenzje.map( reviews => Ok(views.html.reviews(reviews, product)))
   }
 
   def addReviewMenu(productId: Int) = Action { implicit request: MessagesRequest[AnyContent] =>
@@ -116,6 +115,55 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
     reviewRepo.delete(id)
     Redirect("/allReviews")
   }
+
+
+  def getReviewsJson(productId: Int) = Action.async {
+    val produkt = productRepo.getById(productId)
+
+    val recenzje = reviewRepo.getByProduct(productId)
+    val product = Await.result(produkt, Duration.Inf)
+    recenzje.map( reviews => Ok(Json.toJson(reviews, product)))
+
+  }
+
+  def getAllReviewsJson = Action.async {
+    var prod:Seq[Product] = Seq[Product]()
+    val produkty = productRepo.list().onComplete{
+      case Success(p) => prod = p
+      case Failure(_) => print("fail")
+    }
+
+    val recenzje = reviewRepo.list()
+    recenzje.map( reviews => Ok(Json.toJson(reviews, prod)))
+
+  }
+
+
+  def addReviewJson: Action[AnyContent] = Action { implicit request =>
+    val review:Review = request.body.asJson.get.as[Review]
+    reviewRepo.create(review.title, review.content, review.product)
+    Redirect("/reviewsJson/"+review.product)
+  }
+
+  def updateReviewMenuJson(id: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
+    val recenzja = reviewRepo.getById(id)
+    recenzja.map(review => {
+      Ok(Json.toJson(review))
+    })
+  }
+
+  def updateReviewJson = Action { implicit request: MessagesRequest[AnyContent] =>
+    val review:Review = request.body.asJson.get.as[Review]
+    reviewRepo.update(review.id, Review(review.id, review.title, review.content, review.product))
+    Redirect("/reviewsJson/"+review.product)
+  }
+
+  def removeReviewJson = Action { implicit request: MessagesRequest[AnyContent] =>
+    val review:Review = request.body.asJson.get.as[Review]
+    reviewRepo.delete(review.id)
+    Redirect("/reviewsJson/"+review.product)
+  }
+
 
 
 }

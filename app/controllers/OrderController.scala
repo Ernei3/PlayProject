@@ -4,6 +4,7 @@ import javax.inject._
 import models.{Basket, BasketRepository, Order, OrderRepository, Product, ProductRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import scala.concurrent.duration.Duration
@@ -96,6 +97,59 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     orderRepo.delete(id)
     Redirect("/categories")
   }
+
+
+  def ordersJson(userId: Int) = Action.async { implicit request =>
+    val zamowienia = orderRepo.getByUser(userId)
+    zamowienia.map( orders => Ok(Json.toJson(orders, userId)))
+  }
+
+  def allOrdersJson = Action.async { implicit request =>
+    val zamowienia = orderRepo.list()
+    zamowienia.map( orders => Ok(Json.toJson(orders)))
+  }
+
+  def addOrderJson = Action.async { implicit request =>
+
+    val order:Order = request.body.asJson.get.as[Order]
+
+    val produkty = productRepo.list()
+    val koszyk = basketRepo.getByUser(order.user)
+
+    val zamowienie = orderRepo.create(order.user, order.status)
+    var priceSum = 0
+
+    val prod = Await.result(produkty, Duration.Inf)
+    val bask = Await.result(koszyk, Duration.Inf)
+
+    for(ba <- bask) {
+      if(prod.exists(_.id == ba.product)){
+        priceSum += prod.find(_.id == ba.product).get.price * ba.quantity
+      }
+    }
+
+    zamowienie.map(ord => Ok(Json.toJson(ord, prod, bask, priceSum)))
+  }
+
+  def updateOrderMenuJson(id: Integer) = Action.async { implicit request =>
+    val zamowienie = orderRepo.getById(id)
+    zamowienie.map(order => {
+      Ok(Json.toJson(order))
+    })
+  }
+
+  def updateOrderJson: Action[AnyContent] = Action { implicit request =>
+    val order:Order = request.body.asJson.get.as[Order]
+    orderRepo.update(order.id, Order(order.id, order.user, order.status))
+    Redirect("/ordersJson/"+order.user)
+  }
+
+  def dropOrderJson: Action[AnyContent] = Action { implicit request =>
+    val order:Order = request.body.asJson.get.as[Order]
+    orderRepo.delete(order.id)
+    Redirect("/ordersJson/"+order.user)
+  }
+
 
 
 }

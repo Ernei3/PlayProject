@@ -103,21 +103,39 @@ DELETE      /removeFromBasketJson           controllers.BasketController.removeF
 
 
 
-GET         /allOrders                  controllers.OrderController.allOrders
-GET         /orders/:userId             controllers.OrderController.orders(userId: Int)
-GET         /orderDetails/:id           controllers.OrderController.orderDetails(id: Int)
-GET         /addOrder/:userId           controllers.OrderController.addOrder(userId: Int)
-GET         /updateOrder/:id            controllers.OrderController.updateOrderMenu(id: Int)
-POST        /updateOrder                controllers.OrderController.updateOrder
-GET         /removeOrder/:id            controllers.OrderController.removeOrder(id: Int)
-GET         /dropOrder/:id              controllers.OrderController.dropOrder(id: Int)
+GET         /allOrders                      controllers.OrderController.allOrders
+GET         /orders/:userId                 controllers.OrderController.orders(userId: Int)
+GET         /orderDetails/:id               controllers.OrderController.orderDetails(id: Int)
+GET         /addOrder/:userId               controllers.OrderController.addOrder(userId: Int)
+GET         /updateOrder/:id                controllers.OrderController.updateOrderMenu(id: Int)
+POST        /updateOrder                    controllers.OrderController.updateOrder
+GET         /removeOrder/:id                controllers.OrderController.removeOrder(id: Int)
+GET         /dropOrder/:id                  controllers.OrderController.dropOrder(id: Int)
 
-GET         /allOrderedProducts         controllers.OrderProdController.allOrderedProducts
-GET         /orderedProducts/:orderId   controllers.OrderProdController.orderedProducts(orderId: Int)
-POST        /addToOrder                 controllers.OrderProdController.addToOrder
-GET         /changeOrderedMenu/:id      controllers.OrderProdController.changeOrderedMenu(id: Int)
-POST        /changeOrdered              controllers.OrderProdController.changeOrdered
-GET         /removeOrdered/:id          controllers.OrderProdController.removeOrdered(id: Int)
+GET         /allOrdersJson                  controllers.OrderController.allOrdersJson
+GET         /ordersJson/:userId             controllers.OrderController.ordersJson(userId: Int)
+POST        /addOrderJson                   controllers.OrderController.addOrderJson
+GET         /updateOrderMenuJson/:id        controllers.OrderController.updateOrderMenuJson(id: Int)
+PUT         /updateOrderJson                controllers.OrderController.updateOrderJson
+DELETE      /dropOrderJson                  controllers.OrderController.dropOrderJson
+
+
+
+GET         /allOrderedProducts             controllers.OrderProdController.allOrderedProducts
+GET         /orderedProducts/:orderId       controllers.OrderProdController.orderedProducts(orderId: Int)
+POST        /addToOrder                     controllers.OrderProdController.addToOrder
+GET         /changeOrderedMenu/:id          controllers.OrderProdController.changeOrderedMenu(id: Int)
+POST        /changeOrdered                  controllers.OrderProdController.changeOrdered
+GET         /removeOrdered/:id              controllers.OrderProdController.removeOrdered(id: Int)
+
+GET         /allOrderedProductsJson         controllers.OrderProdController.allOrderedProductsJson
+GET         /orderedProductsJson/:orderId   controllers.OrderProdController.orderedProductsJson(orderId: Int)
+POST        /addToOrderJson                 controllers.OrderProdController.addToOrderJson
+GET         /changeOrderedMenuJson/:id      controllers.OrderProdController.changeOrderedMenuJson(id: Int)
+PUT         /changeOrderedJson              controllers.OrderProdController.changeOrderedJson
+DELETE      /removeOrderedJson              controllers.OrderProdController.removeOrderedJson
+
+
 
 GET         /allAddresses               controllers.OrderAdController.allAddresses
 GET         /orderAddress/:orderId      controllers.OrderAdController.orderAddress(orderId: Int)

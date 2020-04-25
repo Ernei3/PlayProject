@@ -1,9 +1,10 @@
 package controllers
 
 import javax.inject._
-import models.{Basket, BasketRepository, OrderProd, OrderProdRepository, OrderRepository, Product, ProductRepository}
+import models.{Basket, BasketRepository, Order, OrderProd, OrderProdRepository, OrderRepository, Product, ProductRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -109,6 +110,64 @@ class OrderProdController @Inject()(orderProdRepo:OrderProdRepository, orderRepo
     orderProdRepo.delete(id)
     Redirect("/allOrderedProducts")
   }
+
+
+
+
+  def orderedProductsJson(orderId: Int) = Action.async { implicit request =>
+
+    val produkty = orderProdRepo.getByOrder(orderId)
+    produkty.map(orderprod => Ok(Json.toJson(orderprod, orderId)))
+  }
+
+  def allOrderedProductsJson = Action.async { implicit request =>
+    val produkty = orderProdRepo.list()
+    produkty.map(orderprod => Ok(Json.toJson(orderprod)))
+  }
+
+  def addToOrderJson = Action.async { implicit request =>
+
+    val order:Order = request.body.asJson.get.as[Order]
+
+    var prod: Seq[Product] = Seq[Product]()
+    val produkty = productRepo.list().onComplete {
+      case Success(p) => prod = p
+      case Failure(_) => print("fail")
+    }
+
+    val koszyk = basketRepo.getByUser(order.user)
+
+    koszyk.map { bask =>
+      for (ba <- bask) {
+        if (prod.exists(_.id == ba.product)) {
+          orderProdRepo.create(prod.find(_.id == ba.product).get.name, prod.find(_.id == ba.product).get.price, ba.quantity, order.id)
+          basketRepo.delete(ba.id)
+        }
+      }
+      Ok(Json.toJson(order))
+    }
+
+  }
+
+  def changeOrderedMenuJson(id: Int) = Action.async { implicit request =>
+
+    val produkty = orderProdRepo.getById(id)
+    produkty.map(orderprod => Ok(Json.toJson(orderprod)))
+  }
+
+  def changeOrderedJson: Action[AnyContent] = Action { implicit request =>
+    val orderprod:OrderProd = request.body.asJson.get.as[OrderProd]
+    orderProdRepo.update(orderprod.id, OrderProd(orderprod.id, orderprod.name, orderprod.price, orderprod.quantity, orderprod.order))
+    Redirect("/orderedProductsJson/"+orderprod.order)
+  }
+
+  def removeOrderedJson: Action[AnyContent] = Action { implicit request =>
+    val orderprod:OrderProd = request.body.asJson.get.as[OrderProd]
+    orderProdRepo.delete(orderprod.id)
+    Redirect("/orderedProductsJson/"+orderprod.order)
+  }
+
+
 
 }
 

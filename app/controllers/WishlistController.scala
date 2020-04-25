@@ -4,6 +4,7 @@ import javax.inject._
 import models.{Product, ProductRepository, Wishlist, WishlistRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -107,6 +108,52 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
     wishRepo.delete(id)
     Redirect("/allWishes")
   }
+
+
+
+
+  def wishlistJson(userId: Int) = Action.async { implicit request =>
+    var prod:Seq[Product] = Seq[Product]()
+    val produkty = productRepo.list().onComplete{
+      case Success(p) => prod = p
+      case Failure(_) => print("fail")
+    }
+
+    val listy = wishRepo.getByUser(userId)
+    listy.map( wishlists => Ok(Json.toJson(wishlists, prod, userId)))
+  }
+
+  def allWishesJson = Action.async { implicit request =>
+    var prod:Seq[Product] = Seq[Product]()
+    val produkty = productRepo.list().onComplete{
+      case Success(p) => prod = p
+      case Failure(_) => print("fail")
+    }
+
+    val listy = wishRepo.list()
+    listy.map( wishlists => Ok(Json.toJson(wishlists, prod)))
+  }
+
+  def addToWishlistJson: Action[AnyContent] = Action { implicit request =>
+    val wishlist:Wishlist = request.body.asJson.get.as[Wishlist]
+    wishRepo.create(wishlist.user, wishlist.quantity, wishlist.product)
+    Redirect("/wishlistJson/"+wishlist.user)
+  }
+
+  def updateWishlistJson: Action[AnyContent] = Action { implicit request =>
+    val wishlist:Wishlist = request.body.asJson.get.as[Wishlist]
+    wishRepo.update(wishlist.id, Wishlist(wishlist.id, wishlist.user, wishlist.quantity, wishlist.product))
+    Redirect("/wishlistJson/"+wishlist.user)
+  }
+
+  def removeFromWishlistJson: Action[AnyContent] = Action { implicit request =>
+    val wishlist:Wishlist = request.body.asJson.get.as[Wishlist]
+    wishRepo.delete(wishlist.id)
+    Redirect("/wishlistJson/"+wishlist.user)
+  }
+
+
+
 
 
 }

@@ -1,9 +1,10 @@
 package controllers
 
 import javax.inject._
-import models.{Product, ProductRepository, Basket, BasketRepository}
+import models.{Basket, BasketRepository, Product, ProductRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -106,6 +107,48 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
     basketRepo.delete(id)
     Redirect("/allBaskets")
   }
+
+
+  def basketJson(userId: Int) = Action.async { implicit request =>
+    var prod:Seq[Product] = Seq[Product]()
+    val produkty = productRepo.list().onComplete{
+      case Success(p) => prod = p
+      case Failure(_) => print("fail")
+    }
+
+    val koszyk = basketRepo.getByUser(userId)
+    koszyk.map( baskets => Ok(Json.toJson(baskets, prod, userId)))
+  }
+
+  def allBasketsJson = Action.async { implicit request =>
+    var prod:Seq[Product] = Seq[Product]()
+    val produkty = productRepo.list().onComplete{
+      case Success(p) => prod = p
+      case Failure(_) => print("fail")
+    }
+
+    val koszyk = basketRepo.list()
+    koszyk.map( baskets => Ok(Json.toJson(baskets, prod)))
+  }
+
+  def addToBasketJson: Action[AnyContent] = Action { implicit request =>
+    val basket:Basket = request.body.asJson.get.as[Basket]
+    basketRepo.create(basket.user, basket.quantity, basket.product)
+    Redirect("/basketJson/"+basket.user)
+  }
+
+  def updateBasketJson: Action[AnyContent] = Action { implicit request =>
+    val basket:Basket = request.body.asJson.get.as[Basket]
+    basketRepo.update(basket.id, Basket(basket.id, basket.user, basket.quantity, basket.product))
+    Redirect("/basketJson/"+basket.user)
+  }
+
+  def removeFromBasketJson: Action[AnyContent] = Action { implicit request =>
+    val basket:Basket = request.body.asJson.get.as[Basket]
+    basketRepo.delete(basket.id)
+    Redirect("/basketJson/"+basket.user)
+  }
+
 
 
 }

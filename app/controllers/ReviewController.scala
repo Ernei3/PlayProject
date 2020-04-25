@@ -145,20 +145,20 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
     Redirect("/reviewsJson/"+review.product)
   }
 
-  def updateReviewMenuJson(id: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
+  def updateReviewMenuJson(id: Int) = Action.async { implicit request =>
     val recenzja = reviewRepo.getById(id)
     recenzja.map(review => {
       Ok(Json.toJson(review))
     })
   }
 
-  def updateReviewJson = Action { implicit request: MessagesRequest[AnyContent] =>
+  def updateReviewJson = Action { implicit request =>
     val review:Review = request.body.asJson.get.as[Review]
     reviewRepo.update(review.id, Review(review.id, review.title, review.content, review.product))
     Redirect("/reviewsJson/"+review.product)
   }
 
-  def removeReviewJson = Action { implicit request: MessagesRequest[AnyContent] =>
+  def removeReviewJson = Action { implicit request =>
     val review:Review = request.body.asJson.get.as[Review]
     reviewRepo.delete(review.id)
     Redirect("/reviewsJson/"+review.product)

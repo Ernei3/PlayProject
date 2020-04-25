@@ -23,6 +23,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
       "id" -> number,
       "user" -> number,
       "status" -> nonEmptyText,
+      "address" -> number
     )(UpdateOrderForm.apply)(UpdateOrderForm.unapply)
   }
 
@@ -40,8 +41,9 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
   }
 
 
-  def orderDetails(id: Int) = Action {
-    Ok(views.html.orderDetails(id))
+  def orderDetails(id: Int) = Action.async {
+    val zamowienia = orderRepo.getById(id)
+    zamowienia.map( order => Ok(views.html.orderDetails(order)))
   }
 
   def addOrder(userId: Int) = Action.async { implicit request =>
@@ -52,7 +54,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     val prod = Await.result(produkty, Duration.Inf)
     val bask = Await.result(koszyk, Duration.Inf)
 
-    val zamowienia = orderRepo.create(userId, "Created")
+    val zamowienia = orderRepo.create(userId, "Created", 0)
     var priceSum = 0
     for(ba <- bask) {
       if(prod.exists(_.id == ba.product)){
@@ -66,7 +68,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
   def updateOrderMenu(id: Integer) = Action.async { implicit request =>
     val zamowienie = orderRepo.getById(id)
     zamowienie.map(order => {
-      val ordForm = updateOrderForm.fill(UpdateOrderForm(order.id, order.user, order.status))
+      val ordForm = updateOrderForm.fill(UpdateOrderForm(order.id, order.user, order.status, order.address))
       Ok(views.html.updateOrderMenu(ordForm, order.status))
     })
   }
@@ -80,7 +82,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
         )
       },
       order => {
-        orderRepo.update(order.id, Order(order.id, order.user, order.status)).map { _ =>
+        orderRepo.update(order.id, Order(order.id, order.user, order.status, order.address)).map { _ =>
           Redirect(routes.OrderController.updateOrderMenu(order.id)).flashing("success" -> "order updated")
         }
       }
@@ -116,7 +118,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     val produkty = productRepo.list()
     val koszyk = basketRepo.getByUser(order.user)
 
-    val zamowienie = orderRepo.create(order.user, order.status)
+    val zamowienie = orderRepo.create(order.user, order.status, order.address)
     var priceSum = 0
 
     val prod = Await.result(produkty, Duration.Inf)
@@ -140,7 +142,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
 
   def updateOrderJson: Action[AnyContent] = Action { implicit request =>
     val order:Order = request.body.asJson.get.as[Order]
-    orderRepo.update(order.id, Order(order.id, order.user, order.status))
+    orderRepo.update(order.id, Order(order.id, order.user, order.status, order.address))
     Redirect("/ordersJson/"+order.user)
   }
 
@@ -155,4 +157,4 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
 }
 
 
-case class UpdateOrderForm(id: Int, user: Int, status: String)
+case class UpdateOrderForm(id: Int, user: Int, status: String, address: Int)

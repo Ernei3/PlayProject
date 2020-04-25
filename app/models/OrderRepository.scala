@@ -7,7 +7,7 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, orderAdRepository: OrderAdRepository)(implicit ec: ExecutionContext) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -17,16 +17,21 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def user = column[Int]("user")
     def status = column[String]("status")
-    def * = (id, user, status) <> ((Order.apply _).tupled, Order.unapply)
+    def address = column[Int]("address")
+    private def address_fk = foreignKey("address_fk", address, orderad)(_.id)
+    def * = (id, user, status, address) <> ((Order.apply _).tupled, Order.unapply)
   }
 
-  val order = TableQuery[OrderTable]
+  import orderAdRepository.OrderAdTable
 
-  def create(user: Int, status: String): Future[Order] = db.run {
-    (order.map(o => (o.user, o.status))
+  val order = TableQuery[OrderTable]
+  private val orderad = TableQuery[OrderAdTable]
+
+  def create(user: Int, status: String, address: Int): Future[Order] = db.run {
+    (order.map(o => (o.user, o.status, o.address))
       returning order.map(_.id)
-      into {case ((user,status),id) => Order(id, user, status)}
-      ) += (user, status)
+      into {case ((user, status, address),id) => Order(id, user, status, address)}
+      ) += (user, status, address)
   }
 
   def list(): Future[Seq[Order]] = db.run {

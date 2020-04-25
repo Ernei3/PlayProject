@@ -1,12 +1,13 @@
 package controllers
 
 import javax.inject._
-import models.{OrderAd, OrderAdRepository, OrderRepository}
+import models.{Order, OrderAd, OrderAdRepository, OrderRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -31,16 +32,15 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
       "country" -> nonEmptyText,
       "city" -> nonEmptyText,
       "street" -> nonEmptyText,
-      "number" -> nonEmptyText,
-      "order" -> number
+      "number" -> nonEmptyText
     )(UpdateAddressForm.apply)(UpdateAddressForm.unapply)
   }
 
 
-  def orderAddress(orderId: Int) = Action.async { implicit request =>
+  def orderAddress(id: Int) = Action.async { implicit request =>
 
-    val adresy = orderAdRepo.getByOrder(orderId)
-    adresy.map(orderad => Ok(views.html.orderAddress(orderad, orderId)))
+    val adresy = orderAdRepo.getById(id)
+    adresy.map(orderad => Ok(views.html.orderAddress(orderad)))
   }
 
   def allAddresses = Action.async { implicit request =>
@@ -61,9 +61,14 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
         )
       },
       orderad => {
-        orderAdRepo.create(orderad.country, orderad.city, orderad.street, orderad.number, orderad.order).map { _ =>
+        val zamowienie = orderRepo.getById(orderad.order)
+        val address = orderAdRepo.create(orderad.country, orderad.city, orderad.street, orderad.number)
+
+        val adr = Await.result(address, Duration.Inf)
+        zamowienie.map( order => orderRepo.update(order.id, Order(order.id, order.user, order.status, adr.id)))
+        Future.successful(
           Redirect(routes.PaymentController.addPayment(orderad.order))
-        }
+        )
       }
     )
   }
@@ -71,7 +76,7 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
   def changeAddressMenu(id: Integer) = Action.async { implicit request =>
     val adres = orderAdRepo.getById(id)
     adres.map(orderad => {
-      val ordadForm = updateAddressForm.fill(UpdateAddressForm(orderad.id, orderad.country, orderad.city, orderad.street, orderad.number, orderad.order))
+      val ordadForm = updateAddressForm.fill(UpdateAddressForm(orderad.id, orderad.country, orderad.city, orderad.street, orderad.number))
       Ok(views.html.changeAddressMenu(ordadForm))
     })
   }
@@ -85,7 +90,7 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
         )
       },
       orderad => {
-        orderAdRepo.update(orderad.id, OrderAd(orderad.id, orderad.country, orderad.city, orderad.street, orderad.number, orderad.order)).map { _ =>
+        orderAdRepo.update(orderad.id, OrderAd(orderad.id, orderad.country, orderad.city, orderad.street, orderad.number)).map { _ =>
           Redirect(routes.OrderAdController.changeAddressMenu(orderad.id)).flashing("success" -> "address updated")
         }
       }
@@ -103,4 +108,4 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
 
 
 case class CreateAddressForm(country: String, city: String, street: String, number: String,order: Int)
-case class UpdateAddressForm(id: Int, country: String, city: String, street: String, number: String,order: Int)
+case class UpdateAddressForm(id: Int, country: String, city: String, street: String, number: String)

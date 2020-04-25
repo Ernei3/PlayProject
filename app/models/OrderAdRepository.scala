@@ -6,7 +6,7 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ Future, ExecutionContext }
 
 @Singleton
-class OrderAdRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, orderRepository: OrderRepository)(implicit ec: ExecutionContext) {
+class OrderAdRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -20,33 +20,23 @@ class OrderAdRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, orde
     def city = column[String]("city")
     def street = column[String]("street")
     def number = column[String]("number")
-    def order = column[Int]("order")
-    private def order_fk = foreignKey("ord_fk",order, ord)(_.id)
-
-    def * = (id, country, city, street, number, order) <> ((OrderAd.apply _).tupled, OrderAd.unapply)
+    def * = (id, country, city, street, number) <> ((OrderAd.apply _).tupled, OrderAd.unapply)
 
   }
 
-  import orderRepository.OrderTable
-
   private val orderad = TableQuery[OrderAdTable]
-  private val ord = TableQuery[OrderTable]
 
 
-  def create(country: String, city: String, street: String, number: String, order: Int ): Future[OrderAd] = db.run {
-    (orderad.map(o => (o.country, o.city, o.street, o.number, o.order))
+  def create(country: String, city: String, street: String, number: String ): Future[OrderAd] = db.run {
+    (orderad.map(o => (o.country, o.city, o.street, o.number))
       returning orderad.map(_.id)
-      into {case ((country, city, street, number, order),id) => OrderAd(id, country, city, street, number, order)}
-      ) += (country, city, street, number, order)
+      into {case ((country, city, street, number),id) => OrderAd(id, country, city, street, number)}
+      ) += (country, city, street, number)
   }
 
 
   def list(): Future[Seq[OrderAd]] = db.run {
     orderad.result
-  }
-
-  def getByOrder(order_id: Int): Future[Seq[OrderAd]] = db.run {
-    orderad.filter(_.order === order_id).result
   }
 
   def getById(id: Int): Future[OrderAd] = db.run {

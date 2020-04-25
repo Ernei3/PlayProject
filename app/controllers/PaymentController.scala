@@ -64,7 +64,7 @@ class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:Orde
       payment => {
         val zamowienie = orderRepo.getById(payment.order)
         zamowienie.map { order =>
-          orderRepo.update(payment.order, Order(order.id, order.user, "Accepted"))
+          orderRepo.update(payment.order, Order(order.id, order.user, "Accepted", order.address))
         }
         paymentRepo.create(payment.number, payment.name, payment.date, payment.code, payment.order).map { _ =>
           Redirect(routes.OrderController.orderDetails(payment.order))

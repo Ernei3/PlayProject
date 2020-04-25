@@ -49,7 +49,9 @@ CREATE TABLE "basket" (
 CREATE TABLE "order" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   "user" INTEGER,
-  "status" TEXT NOT NULL
+  "status" TEXT NOT NULL,
+  "address" INT NOT NULL,
+  FOREIGN KEY("address") references orderad(id)
 );
 
 CREATE TABLE "orderprod" (
@@ -66,9 +68,7 @@ CREATE TABLE "orderad" (
  "country" VARCHAR NOT NULL,
  "city" VARCHAR NOT NULL,
  "street" VARCHAR NOT NULL,
- "number" VARCHAR NOT NULL,
- "order" INT NOT NULL,
- FOREIGN KEY("order") references "order"(id)
+ "number" VARCHAR NOT NULL
 );
 
 CREATE TABLE "payment" (

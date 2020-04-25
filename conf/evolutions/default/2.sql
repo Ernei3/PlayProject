@@ -32,15 +32,15 @@ INSERT INTO "basket"("user", "quantity", "product") VALUES (3, 2, 4);
 INSERT INTO "basket"("user", "quantity", "product") VALUES (3, 2, 5);
 
 
-INSERT INTO "order"("user","status") VALUES (1, "Delivered");
-INSERT INTO "order"("user","status") VALUES (2, "Accepted");
+INSERT INTO "order"("user","status", "address") VALUES (1, "Delivered", 1);
+INSERT INTO "order"("user","status", "address") VALUES (2, "Accepted", 2);
 
 
 INSERT INTO "orderprod"("name","price", "quantity", "order") VALUES ("Twilight", 28, 1, 1);
 INSERT INTO "orderprod"("name","price", "quantity", "order") VALUES ("Roge One", 23, 1, 2);
 
-INSERT INTO "orderad"("country","city", "street", "number", "order") VALUES ("Poland", "Krakow", "Wielka", "22b", 1);
-INSERT INTO "orderad"("country","city", "street", "number", "order") VALUES ("Poland", "Warsaw", "Lwowska", "21/3", 2);
+INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "Krakow", "Wielka", "22b");
+INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "Warsaw", "Lwowska", "21/3");
 
 
 INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("1111111111111111", "Ala Makota", "2/25", 111, 1);

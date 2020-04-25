@@ -1,11 +1,10 @@
-@(orderads: Seq[OrderAd], orderId: Int)
+@(orderad: OrderAd)
 
-<p>Address for order @orderId</p>
+<p>Address:</p>
 
-@for(orderad <- orderads) {
-    <p>@orderad.country
-    @orderad.city
-    @orderad.street
-    @orderad.number
-    </p>
-}
+
+<p>@orderad.country
+@orderad.city
+@orderad.street
+@orderad.number
+</p>

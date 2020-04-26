@@ -5,6 +5,7 @@ import models.{Order, OrderAd, OrderAdRepository, OrderRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.libs.json._
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -102,6 +103,38 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
     orderAdRepo.delete(id)
     Redirect("/allAddresses")
   }
+
+
+
+  def allAddressesJson = Action.async { implicit request =>
+    val adresy = orderAdRepo.list()
+    adresy.map(orderad => Ok(Json.toJson(orderad)))
+  }
+
+  def orderAddressJson(id: Int) = Action.async { implicit request =>
+    val adresy = orderAdRepo.getById(id)
+    adresy.map(orderad => Ok(Json.toJson(orderad)))
+  }
+
+  def addAddressJson = Action { implicit request =>
+
+
+    val result:JsValue = request.body.asJson.get
+    val orderad:OrderAd = (result \ 0 \ 0).get.as[OrderAd]
+    val orderId:Int = (result \ 1).get.as[Int]
+
+    val zamowienie = orderRepo.getById(orderId)
+    val address = orderAdRepo.create(orderad.country, orderad.city, orderad.street, orderad.number)
+
+    val adr = Await.result(address, Duration.Inf)
+    zamowienie.map( order => orderRepo.update(order.id, Order(order.id, order.user, order.status, adr.id)))
+    //Redirect(routes.PaymentController.addPayment(orderad.order))
+    Redirect("/ordersJson/"+orderId)
+
+  }
+
+
+
 
 
 }

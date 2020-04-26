@@ -133,6 +133,22 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
 
   }
 
+  def changeAddressMenuJson(id: Int) = Action.async { implicit request =>
+    val adresy = orderAdRepo.getById(id)
+    adresy.map(orderad => Ok(Json.toJson(orderad)))
+  }
+
+  def changeAddressJson = Action { implicit request =>
+    val orderad:OrderAd = request.body.asJson.get.as[OrderAd]
+    orderAdRepo.update(orderad.id, OrderAd(orderad.id, orderad.country, orderad.city, orderad.street, orderad.number))
+    Redirect("/orderAddressJson/"+orderad.id)
+  }
+
+  def removeAddressJson = Action { implicit request =>
+    val orderad:OrderAd = request.body.asJson.get.as[OrderAd]
+    orderAdRepo.delete(orderad.id)
+    Redirect("/allAddressesJson")
+  }
 
 
 

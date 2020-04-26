@@ -1,9 +1,10 @@
 package controllers
 
 import javax.inject._
-import models.{Payment, PaymentRepository, Order, OrderRepository}
+import models.{Order, OrderRepository, Payment, PaymentRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -103,6 +104,42 @@ class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:Orde
     paymentRepo.delete(id)
     Redirect("/allPayments")
   }
+
+  def allPaymentsJson = Action.async { implicit request =>
+    val zaplaty = paymentRepo.list()
+    zaplaty.map(payment => Ok(Json.toJson(payment)))
+  }
+
+  def paymentJson(orderId: Int) = Action.async { implicit request =>
+
+    val zaplaty = paymentRepo.getByOrder(orderId)
+    zaplaty.map(payment => Ok(Json.toJson(payment, orderId)))
+  }
+
+  def sendPaymentJson = Action { implicit request =>
+    val payment:Payment = request.body.asJson.get.as[Payment]
+    paymentRepo.create(payment.number, payment.name, payment.date, payment.code, payment.order)
+    Redirect("/paymentJson/"+payment.order)
+  }
+
+  def changePaymentMenuJson(id: Int) = Action.async { implicit request =>
+    val zaplaty = paymentRepo.getById(id)
+    zaplaty.map(payment => Ok(Json.toJson(payment)))
+  }
+
+  def changePaymentJson = Action { implicit request =>
+    val payment:Payment = request.body.asJson.get.as[Payment]
+    paymentRepo.update(payment.id, Payment(payment.id, payment.number, payment.name, payment.date, payment.code, payment.order))
+    Redirect("/paymentJson/"+payment.order)
+  }
+
+  def removePaymentJson = Action { implicit request =>
+    val payment:Payment = request.body.asJson.get.as[Payment]
+    paymentRepo.delete(payment.id)
+    Redirect("/paymentJson/"+payment.order)
+  }
+
+
 
 }
 

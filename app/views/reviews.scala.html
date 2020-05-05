@@ -3,7 +3,7 @@
 <p>Reviews for @product.name</p>
 
 <p>@for(review <- reviews) {
-    <p><b>@review.title</b></p>
+    <p><strong>@review.title</strong></p>
     <p>@review.content</p>
     <p><a href="@controllers.routes.ReviewController.updateReviewMenu(review.id)">Edit</a>
         <a href="@controllers.routes.ReviewController.removeReview(review.id)">Delete</a></p>

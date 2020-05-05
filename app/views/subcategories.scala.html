@@ -1,7 +1,7 @@
 @(subcategories: Seq[Subcategory], categories: Seq[Category])
 
 @for(sub <- subcategories) {
-    <p><b>@sub.name</b>
+    <p><strong>@sub.name</strong>
     @if(categories.exists(_.id == sub.category)){
         @categories.find(_.id == sub.category).get.name
     }else {

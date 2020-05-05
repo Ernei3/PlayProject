@@ -3,7 +3,7 @@
 @import helper._
 
 @for(basket <- baskets) {
-    <p><b>User @basket.user</b> -
+    <p><strong>User @basket.user</strong> -
     @if(products.exists(_.id == basket.product)){
         @products.find(_.id == basket.product).get.name;
     }else {

@@ -1,8 +1,8 @@
 @(products: Seq[Product], subcategories: Seq[Subcategory])
 
 @for(product <- products) {
-    <p><b>@product.name</b>
-    <b>@product.price $; </b>
+    <p><strong>@product.name</strong>
+    <strong>@product.price $; </strong>
     @if(subcategories.exists(_.id == product.subcategory)){
         @subcategories.find(_.id == product.subcategory).get.name
     }else {

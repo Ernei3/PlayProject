@@ -3,7 +3,7 @@
 @import helper._
 
 @for(wishlist <- wishlists) {
-    <p><b>User @wishlist.user</b> -
+    <p><strong>User @wishlist.user</strong> -
     @if(products.exists(_.id == wishlist.product)){
         @products.find(_.id == wishlist.product).get.name;
     }else {

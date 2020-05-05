@@ -1,7 +1,7 @@
 @(reviews: Seq[Review],products: Seq[Product])
 
 @for(review <- reviews) {
-    <p><b>@review.title</b></p>
+    <p><strong>@review.title</strong></p>
      <p>@if(products.exists(_.id == review.product)){
             @products.find(_.id == review.product).get.name
         }else {

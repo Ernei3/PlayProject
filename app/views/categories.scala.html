@@ -1,7 +1,7 @@
 @(categories: Seq[Category])
 
 @for(category <- categories){
-    <p><b>@category.name</b>
+    <p><strong>@category.name</strong>
     <a href="@controllers.routes.SubcategoryController.subByCat(category.id)">Subcategories</a>
     <a href="@controllers.routes.CategoryController.updateCategoryMenu(category.id)">Edit</a>
     <a href="@controllers.routes.CategoryController.removeCategory(category.id)">Delete</a></p>

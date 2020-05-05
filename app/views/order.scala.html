@@ -1,0 +1,9 @@
+@(orders: Seq[Order], userId: Int)
+
+<p>Orders of the user @userId. </p>
+
+@for(order <- orders){
+    <p><b>@order.id</b>
+        @order.status
+        <a href="@controllers.routes.OrderController.orderDetails(order.id)">Details</a></p>
+}

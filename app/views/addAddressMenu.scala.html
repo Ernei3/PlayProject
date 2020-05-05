@@ -1,0 +1,15 @@
+@(category: Form[CreateAddressForm], orderId: Int)(implicit request: MessagesRequestHeader)
+
+@import helper._
+
+@form(routes.OrderAdController.addAddress()) {
+    @helper.CSRF.formField
+    @inputText(category("country"))
+    @inputText(category("city"))
+    @inputText(category("street"))
+    @inputText(category("number"))
+    <input name="order" id="order" value="@orderId" type="hidden" />
+    <div class="buttons">
+        <input type="submit" value="Add Address"/>
+    </div>
+}

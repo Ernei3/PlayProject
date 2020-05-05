@@ -3,67 +3,171 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           controllers.HomeController.index
+GET     /                                   controllers.HomeController.index
 
-GET         /categories                 controllers.HomeController.categories
-GET         /getCategory/:id            controllers.HomeController.getCategory(id: Int)
-GET         /addCategoryMenu            controllers.HomeController.addCategoryMenu
-POST        /addCategory                controllers.HomeController.addCategory
-PUT         /updateCategory             controllers.HomeController.updateCategory
-DELETE      /removeCategory             controllers.HomeController.removeCategory
+GET         /categories                     controllers.CategoryController.categories
+GET         /addCategoryMenu                controllers.CategoryController.addCategoryMenu
+POST        /addCategory                    controllers.CategoryController.addCategory
+GET         /updateCategoryMenu/:id         controllers.CategoryController.updateCategoryMenu(id: Int)
+POST        /updateCategory                 controllers.CategoryController.updateCategory
+GET         /removeCategory/:id             controllers.CategoryController.removeCategory(id: Int)
 
-GET         /subcategories              controllers.HomeController.subcategories
-GET         /getSub/:id                 controllers.HomeController.getSub(id: Int)
-GET         /addSubMenu                 controllers.HomeController.addSubMenu
-POST        /addSub                     controllers.HomeController.addSub
-PUT         /updateSub                  controllers.HomeController.updateSub
-DELETE      /removeSub                  controllers.HomeController.removeSub
+GET         /categoriesJson                 controllers.CategoryController.getCategoriesJson
+POST        /addCategoryJson                controllers.CategoryController.addCategoryJson
+GET         /updateCategoryMenuJson/:id     controllers.CategoryController.updateCategoryMenuJson(id: Int)
+PUT         /updateCategoryJson             controllers.CategoryController.updateCategoryJson
+DELETE      /removeCategoryJson             controllers.CategoryController.removeCategoryJson
 
-GET         /products                   controllers.HomeController.products
-GET         /productsByCat/:catId       controllers.HomeController.productsByCat(catId: Int)
-GET         /productBySub/:subId        controllers.HomeController.productsBySub(subId: Int)
-GET         /productDetails/:id         controllers.HomeController.productDetails(id: Int)
-GET         /addProductMenu             controllers.HomeController.addProductMenu
-POST        /addProduct                 controllers.HomeController.addProduct
-PUT         /updateProduct              controllers.HomeController.updateProduct
-DELETE      /removeProduct              controllers.HomeController.removeProduct
 
-GET         /reviews/:productId         controllers.HomeController.reviews(productId: Int)
-GET         /addReviewMenu/             controllers.HomeController.addReviewMenu
-POST        /addReview                  controllers.HomeController.addReview
-PUT         /updateReview               controllers.HomeController.updateReview
-DELETE      /removeReview               controllers.HomeController.removeReview
 
-GET         /wishlist                   controllers.HomeController.wishlist
-POST        /addToWishlist              controllers.HomeController.addToWishlist
-PUT         /updateWishlist             controllers.HomeController.updateWishlist
-DELETE      /removeFromWishlist         controllers.HomeController.removeFromWishlist
+GET         /subcategories                  controllers.SubcategoryController.subcategories
+GET         /subByCat/:catId                controllers.SubcategoryController.subByCat(catId :Int)
+GET         /addSubMenu                     controllers.SubcategoryController.addSubMenu
+POST        /addSub                         controllers.SubcategoryController.addSub
+GET         /updateSubMenu/:id              controllers.SubcategoryController.updateSubMenu(id: Int)
+POST        /updateSub                      controllers.SubcategoryController.updateSub
+GET         /removeSub/:id                  controllers.SubcategoryController.removeSub(id: Int)
 
-GET         /basket                     controllers.HomeController.basket
-POST        /addToBasket                controllers.HomeController.addToBasket
-PUT         /changeQuantity             controllers.HomeController.changeQuantity
-DELETE      /removeFromBasket           controllers.HomeController.removeFromBasket
+GET         /subcategoriesJson              controllers.SubcategoryController.getSubcategoriesJson
+GET         /subByCatJson/:catId            controllers.SubcategoryController.subByCatJson(catId :Int)
+POST        /addSubcategoryJson             controllers.SubcategoryController.addSubcategoryJson
+GET         /updateSubcategoryMenuJson/:id  controllers.SubcategoryController.updateSubcategoryMenuJson(id: Int)
+PUT         /updateSubcategoryJson          controllers.SubcategoryController.updateSubcategoryJson
+DELETE      /removeSubcategoryJson          controllers.SubcategoryController.removeSubcategoryJson
 
-GET         /orders                     controllers.HomeController.orders
-GET         /orderDetails/:id           controllers.HomeController.orderDetails(id: Int)
-POST        /addOrder                   controllers.HomeController.addOrder
-PUT         /updateOrder                controllers.HomeController.updateOrder
-DELETE      /removeOrder                controllers.HomeController.removeOrder
 
-GET         /orderedProducts/:orderId   controllers.HomeController.orderedProducts(orderId: Int)
-POST        /addToOrder                 controllers.HomeController.addToOrder
-PUT         /changeOrdered              controllers.HomeController.changeOrdered
-DELETE      /removeOrdered              controllers.HomeController.removeOrdered
 
-GET         /orderAddress/:orderId      controllers.HomeController.orderAddress(orderId: Int)
-POST        /addAddress                 controllers.HomeController.addAddress
-PUT         /changeAddress              controllers.HomeController.changeAddress
-DELETE      /removeAddress              controllers.HomeController.removeAddress
+GET         /products                       controllers.ProductController.products
+GET         /productsBySub/:subId           controllers.ProductController.productsBySub(subId: Int)
+GET         /productDetails/:id             controllers.ProductController.productDetails(id: Int)
+GET         /addProductMenu                 controllers.ProductController.addProductMenu
+POST        /addProduct                     controllers.ProductController.addProduct
+GET         /updateProductMenu/:id          controllers.ProductController.updateProductMenu(id: Int)
+POST        /updateProduct                  controllers.ProductController.updateProduct
+GET         /removeProduct/:id              controllers.ProductController.removeProduct(id: Int)
 
-GET         /payment/:orderId           controllers.HomeController.payment(orderId: Int)
-POST        /sendPayment                controllers.HomeController.sendPayment
-PUT         /changePayment              controllers.HomeController.changePayment
-DELETE      /removePayment              controllers.HomeController.removePayment
+GET         /productsJson                   controllers.ProductController.getProductsJson
+GET         /productsBySubJson/:subId       controllers.ProductController.productsBySubJson(subId: Int)
+GET         /productDetailsJson/:id         controllers.ProductController.productDetailsJson(id: Int)
+POST        /addProductJson                 controllers.ProductController.addProductJson
+GET         /updateProductMenuJson/:id      controllers.ProductController.updateProductMenuJson(id: Int)
+PUT         /updateProductJson              controllers.ProductController.updateProductJson
+DELETE      /removeProductJson              controllers.ProductController.removeProductJson
+
+
+
+GET         /reviews/:productId             controllers.ReviewController.reviews(productId: Int)
+GET         /allReviews                     controllers.ReviewController.allReviews
+GET         /addReviewMenu/:productId       controllers.ReviewController.addReviewMenu(productId: Int)
+POST        /addReview/:productId           controllers.ReviewController.addReview(productId: Int)
+GET         /updateReviewMenu/:id           controllers.ReviewController.updateReviewMenu(id: Int)
+POST        /updateReview                   controllers.ReviewController.updateReview
+GET         /removeReview/:id               controllers.ReviewController.removeReview(id: Int)
+
+GET         /reviewsJson/:productId         controllers.ReviewController.getReviewsJson(productId: Int)
+GET         /getAllReviewsJson              controllers.ReviewController.getAllReviewsJson
+POST        /addReviewJson                  controllers.ReviewController.addReviewJson
+GET         /updateReviewMenuJson/:id       controllers.ReviewController.updateReviewMenuJson(id: Int)
+PUT         /updateReviewJson               controllers.ReviewController.updateReviewJson
+DELETE      /removeReviewJson               controllers.ReviewController.removeReviewJson
+
+
+
+GET         /wishlist/:userId               controllers.WishlistController.wishlist(userId: Int)
+GET         /allWishes                      controllers.WishlistController.allWishes
+GET         /addToWishlistMenu/productId    controllers.WishlistController.addToWishlistMenu(productId: Int)
+POST        /addToWishlist/:productId       controllers.WishlistController.addToWishlist(productId: Int)
+POST        /updateWishlist                 controllers.WishlistController.updateWishlist
+GET         /removeFromWishlist/:id         controllers.WishlistController.removeFromWishlist(id: Int)
+
+GET         /wishlistJson/:userId           controllers.WishlistController.wishlistJson(userId: Int)
+GET         /allWishesJson                  controllers.WishlistController.allWishesJson
+POST        /addToWishlistJson              controllers.WishlistController.addToWishlistJson
+PUT         /updateWishlistJson             controllers.WishlistController.updateWishlistJson
+DELETE      /removeFromWishlistJson         controllers.WishlistController.removeFromWishlistJson
+
+
+
+GET         /basket/:userId                 controllers.BasketController.basket(userId: Int)
+GET         /allBaskets                     controllers.BasketController.allBaskets
+GET         /addToBasketMenu/:productId     controllers.BasketController.addToBasketMenu(productId: Int)
+POST        /addToBasket/:productId         controllers.BasketController.addToBasket(productId: Int)
+POST        /updateBasket                   controllers.BasketController.updateBasket
+GET         /removeFromBasket/:id           controllers.BasketController.removeFromBasket(id: Int)
+
+GET         /basketJson/:userId             controllers.BasketController.basketJson(userId: Int)
+GET         /allBasketsJson                 controllers.BasketController.allBasketsJson
+POST        /addToBasketJson                controllers.BasketController.addToBasketJson
+PUT         /updateBasketJson               controllers.BasketController.updateBasketJson
+DELETE      /removeFromBasketJson           controllers.BasketController.removeFromBasketJson
+
+
+
+GET         /allOrders                      controllers.OrderController.allOrders
+GET         /orders/:userId                 controllers.OrderController.orders(userId: Int)
+GET         /orderDetails/:id               controllers.OrderController.orderDetails(id: Int)
+GET         /addOrder/:userId               controllers.OrderController.addOrder(userId: Int)
+GET         /updateOrder/:id                controllers.OrderController.updateOrderMenu(id: Int)
+POST        /updateOrder                    controllers.OrderController.updateOrder
+GET         /removeOrder/:id                controllers.OrderController.removeOrder(id: Int)
+GET         /dropOrder/:id                  controllers.OrderController.dropOrder(id: Int)
+
+GET         /allOrdersJson                  controllers.OrderController.allOrdersJson
+GET         /ordersJson/:userId             controllers.OrderController.ordersJson(userId: Int)
+POST        /addOrderJson                   controllers.OrderController.addOrderJson
+GET         /updateOrderMenuJson/:id        controllers.OrderController.updateOrderMenuJson(id: Int)
+PUT         /updateOrderJson                controllers.OrderController.updateOrderJson
+DELETE      /dropOrderJson                  controllers.OrderController.dropOrderJson
+
+
+
+GET         /allOrderedProducts             controllers.OrderProdController.allOrderedProducts
+GET         /orderedProducts/:orderId       controllers.OrderProdController.orderedProducts(orderId: Int)
+POST        /addToOrder                     controllers.OrderProdController.addToOrder
+GET         /changeOrderedMenu/:id          controllers.OrderProdController.changeOrderedMenu(id: Int)
+POST        /changeOrdered                  controllers.OrderProdController.changeOrdered
+GET         /removeOrdered/:id              controllers.OrderProdController.removeOrdered(id: Int)
+
+GET         /allOrderedProductsJson         controllers.OrderProdController.allOrderedProductsJson
+GET         /orderedProductsJson/:orderId   controllers.OrderProdController.orderedProductsJson(orderId: Int)
+POST        /addToOrderJson                 controllers.OrderProdController.addToOrderJson
+GET         /changeOrderedMenuJson/:id      controllers.OrderProdController.changeOrderedMenuJson(id: Int)
+PUT         /changeOrderedJson              controllers.OrderProdController.changeOrderedJson
+DELETE      /removeOrderedJson              controllers.OrderProdController.removeOrderedJson
+
+
+
+GET         /allAddresses                   controllers.OrderAdController.allAddresses
+GET         /orderAddress/:id               controllers.OrderAdController.orderAddress(id: Int)
+GET         /addAddressMenu/:orderId        controllers.OrderAdController.addAddressMenu(orderId: Int)
+POST        /addAddress                     controllers.OrderAdController.addAddress
+GET         /changeAddressMenu/:id          controllers.OrderAdController.changeAddressMenu(id: Int)
+POST        /changeAddress                  controllers.OrderAdController.changeAddress
+GET         /removeAddress/:id              controllers.OrderAdController.removeAddress(id: Int)
+
+GET         /allAddressesJson               controllers.OrderAdController.allAddressesJson
+GET         /orderAddressJson/:id           controllers.OrderAdController.orderAddressJson(id: Int)
+POST        /addAddressJson                 controllers.OrderAdController.addAddressJson
+GET         /changeAddressMenuJson/:id      controllers.OrderAdController.changeAddressMenuJson(id: Int)
+PUT         /changeAddressJson              controllers.OrderAdController.changeAddressJson
+DELETE      /removeAddressJson              controllers.OrderAdController.removeAddressJson
+
+
+GET         /allPayments                    controllers.PaymentController.allPayments
+GET         /payment/:orderId               controllers.PaymentController.payment(orderId: Int)
+GET         /addPayment/:orderId            controllers.PaymentController.addPayment(orderId: Int)
+POST        /sendPayment                    controllers.PaymentController.sendPayment
+GET         /changePaymentMenu/:id          controllers.PaymentController.changePaymentMenu(id: Int)
+POST        /changePayment                  controllers.PaymentController.changePayment
+GET         /removePayment/:id              controllers.PaymentController.removePayment(id: Int)
+
+GET         /allPaymentsJson                controllers.PaymentController.allPaymentsJson
+GET         /paymentJson/:orderId           controllers.PaymentController.paymentJson(orderId: Int)
+POST        /sendPaymentJson                controllers.PaymentController.sendPaymentJson
+GET         /changePaymentMenuJson/:id      controllers.PaymentController.changePaymentMenuJson(id: Int)
+PUT         /changePaymentJson              controllers.PaymentController.changePaymentJson
+DELETE      /removePaymentJson               controllers.PaymentController.removePaymentJson
+
 
 
 

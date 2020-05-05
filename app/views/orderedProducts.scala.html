@@ -1,0 +1,10 @@
+@(orderprods: Seq[OrderProd], orderId: Int)
+
+<p>Products from order @orderId</p>
+
+@for(orderprod <- orderprods) {
+    <p>@orderprod.name
+        @orderprod.price $
+        Quantity: @orderprod.quantity
+    </p>
+}

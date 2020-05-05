@@ -1,0 +1,16 @@
+@(products: Seq[Product], subcategories: Seq[Subcategory])
+
+@for(product <- products) {
+    <p><b>@product.name</b>
+    <b>@product.price $; </b>
+    @if(subcategories.exists(_.id == product.subcategory)){
+        @subcategories.find(_.id == product.subcategory).get.name
+    }else {
+        Error: Subcategory with id @product.subcategory doesn't exist.
+    }
+    <a href="@controllers.routes.ProductController.productDetails(product.id)">Details</a>
+    <a href="@controllers.routes.ProductController.updateProductMenu(product.id)">Edit</a>
+    <a href="@controllers.routes.ProductController.removeProduct(product.id)">Delete</a></p>
+}
+
+<p><a href="@controllers.routes.ProductController.addProductMenu()">Add new</a></p>

@@ -1,0 +1,8 @@
+@(order: Order)
+
+
+<p>Order number: @order.id</p>
+
+<p><a href="@controllers.routes.OrderProdController.orderedProducts(order.id)">Products</a></p>
+<p><a href="@controllers.routes.OrderAdController.orderAddress(order.address)">Address</a></p>
+<p><a href="@controllers.routes.PaymentController.payment(order.id)">Payment</a></p>

@@ -1,0 +1,14 @@
+@(products: Seq[Product], subcategory: Subcategory)
+
+
+<p>Products for @subcategory.name:</p>
+
+@for(product <- products) {
+    <p><b>@product.name</b>
+    <b>@product.price $; </b>
+        <a href="@controllers.routes.ProductController.productDetails(product.id)">Details</a>
+        <p><a href="@controllers.routes.BasketController.addToBasketMenu(product.id)">Add to Basket</a></p>
+        <p><a href="@controllers.routes.WishlistController.addToWishlistMenu(product.id)">Add to Wishlist</a></p>
+        <a href="@controllers.routes.ProductController.updateProductMenu(product.id)">Edit</a>
+        <a href="@controllers.routes.ProductController.removeProduct(product.id)">Delete</a></p>
+}

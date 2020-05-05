@@ -1,0 +1,14 @@
+@(reviews: Seq[Review],products: Seq[Product])
+
+@for(review <- reviews) {
+    <p><b>@review.title</b></p>
+     <p>@if(products.exists(_.id == review.product)){
+            @products.find(_.id == review.product).get.name
+        }else {
+            Error: Product with id @review.product doesn't exist.
+        }</p>
+    <p>@review.content</p>
+    <p><a href="@controllers.routes.ReviewController.updateReviewMenu(review.id)">Edit</a>
+        <a href="@controllers.routes.ReviewController.removeReview(review.id)">Delete</a></p>
+    <p></p>
+}

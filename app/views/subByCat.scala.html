@@ -1,0 +1,10 @@
+@(subcategories: Seq[Subcategory], categoryName: String)
+
+<p>Subcategories for @categoryName:</p>
+
+@for(sub <- subcategories) {
+    <p><b>@sub.name</b>
+        <a href="@controllers.routes.ProductController.productsBySub(sub.id)">Products</a>
+        <a href="@controllers.routes.SubcategoryController.updateSubMenu(sub.id)">Edit</a>
+        <a href="@controllers.routes.SubcategoryController.removeSub(sub.id)">Delete</a></p>
+}

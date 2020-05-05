@@ -1,0 +1,18 @@
+@(order: Form[UpdateOrderedForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.OrderProdController.changeOrdered()) {
+    @helper.CSRF.formField
+    <input name="id" id="id" value="@order("id").value" type="hidden" />
+    @inputText(order("name"))
+    @inputText(order("price"))
+    Quantity:<input type="number" id="quantity" name="quantity" min="1" max="5" value="@order("quantity").value">
+    <input name="order" id="order" value="@order("order").value" type="hidden" />
+
+    <div class="buttons">
+        <input type="submit" value="Change Ordered"/>
+    </div>
+}

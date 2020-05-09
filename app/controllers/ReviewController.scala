@@ -118,11 +118,8 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
 
 
   def getReviewsJson(productId: Int) = Action.async {
-    val produkt = productRepo.getById(productId)
-
     val recenzje = reviewRepo.getByProduct(productId)
-    val product = Await.result(produkt, Duration.Inf)
-    recenzje.map( reviews => Ok(Json.toJson(reviews, product)))
+    recenzje.map( reviews => Ok(Json.toJson(reviews)))
 
   }
 

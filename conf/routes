@@ -75,7 +75,7 @@ DELETE      /removeReviewJson               controllers.ReviewController.removeR
 
 GET         /wishlist/:userId               controllers.WishlistController.wishlist(userId: Int)
 GET         /allWishes                      controllers.WishlistController.allWishes
-GET         /addToWishlistMenu/productId    controllers.WishlistController.addToWishlistMenu(productId: Int)
+GET         /addToWishlistMenu/:productId    controllers.WishlistController.addToWishlistMenu(productId: Int)
 POST        /addToWishlist/:productId       controllers.WishlistController.addToWishlist(productId: Int)
 POST        /updateWishlist                 controllers.WishlistController.updateWishlist
 GET         /removeFromWishlist/:id         controllers.WishlistController.removeFromWishlist(id: Int)

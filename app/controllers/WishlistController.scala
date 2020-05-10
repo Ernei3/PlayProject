@@ -113,14 +113,8 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
 
 
   def wishlistJson(userId: Int) = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
-
     val listy = wishRepo.getByUser(userId)
-    listy.map( wishlists => Ok(Json.toJson(wishlists, prod, userId)))
+    listy.map( wishlists => Ok(Json.toJson(wishlists)))
   }
 
   def allWishesJson = Action.async { implicit request =>

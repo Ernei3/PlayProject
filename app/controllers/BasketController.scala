@@ -110,14 +110,8 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
 
 
   def basketJson(userId: Int) = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
-
     val koszyk = basketRepo.getByUser(userId)
-    koszyk.map( baskets => Ok(Json.toJson(baskets, prod, userId)))
+    koszyk.map( baskets => Ok(Json.toJson(baskets)))
   }
 
   def allBasketsJson = Action.async { implicit request =>

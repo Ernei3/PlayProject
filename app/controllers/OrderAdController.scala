@@ -116,12 +116,9 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
     adresy.map(orderad => Ok(Json.toJson(orderad)))
   }
 
-  def addAddressJson = Action { implicit request =>
+  def addAddressJson(orderId: Int) = Action { implicit request =>
 
-
-    val result:JsValue = request.body.asJson.get
-    val orderad:OrderAd = (result \ 0 \ 0).get.as[OrderAd]
-    val orderId:Int = (result \ 1).get.as[Int]
+    val orderad:OrderAd = request.body.asJson.get.as[OrderAd]
 
     val zamowienie = orderRepo.getById(orderId)
     val address = orderAdRepo.create(orderad.country, orderad.city, orderad.street, orderad.number)

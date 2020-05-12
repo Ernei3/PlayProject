@@ -148,7 +148,7 @@ GET         /removeAddress/:id              controllers.OrderAdController.remove
 
 GET         /allAddressesJson               controllers.OrderAdController.allAddressesJson
 GET         /orderAddressJson/:id           controllers.OrderAdController.orderAddressJson(id: Int)
-POST        /addAddressJson                 controllers.OrderAdController.addAddressJson
+POST        /addAddressJson/:orderId        controllers.OrderAdController.addAddressJson(orderId: Int)
 GET         /changeAddressMenuJson/:id      controllers.OrderAdController.changeAddressMenuJson(id: Int)
 PUT         /changeAddressJson              controllers.OrderAdController.changeAddressJson
 DELETE      /removeAddressJson              controllers.OrderAdController.removeAddressJson

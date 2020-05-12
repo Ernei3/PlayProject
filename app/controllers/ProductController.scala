@@ -134,22 +134,15 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
 
 
   def getProductsJson: Action[AnyContent] = Action.async { implicit request =>
-    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
-    val podkategorie = subRepo.list().onComplete{
-      case Success(sub) => subcateg = sub
-      case Failure(_) => print("fail")
-    }
 
     val produkty = productsRepo.list()
-    produkty.map( products => Ok(Json.toJson(products, subcateg)))
+    produkty.map( products => Ok(Json.toJson(products)))
   }
 
   def productsBySubJson(subId: Int) = Action.async { implicit request =>
 
-    val podkategoria = subRepo.getById(subId)
     val produkty = productsRepo.getBySub(subId)
-    val subcateg = Await.result(podkategoria, Duration.Inf)
-    produkty.map( products => Ok(Json.toJson(products, subcateg)))
+    produkty.map( products => Ok(Json.toJson(products)))
   }
 
   def productDetailsJson(id: Int) = Action.async { implicit request =>

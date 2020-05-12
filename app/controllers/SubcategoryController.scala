@@ -125,22 +125,15 @@ class  SubcategoryController @Inject()(subRepo: SubcategoryRepository, categoryR
 
 
   def getSubcategoriesJson = Action.async { implicit request =>
-    var categ:Seq[Category] = Seq[Category]()
-    val kategorie = categoryRepo.list().onComplete{
-      case Success(cat) => categ = cat
-      case Failure(_) => print("fail")
-    }
 
     val podkategorie = subRepo.list()
-    podkategorie.map( subcategories => Ok(Json.toJson(subcategories, categ)))
+    podkategorie.map( subcategories => Ok(Json.toJson(subcategories)))
   }
 
   def subByCatJson(catId: Int) = Action.async { implicit request =>
-    val kategoria = categoryRepo.getById(catId)
-    val categ = Await.result(kategoria, Duration.Inf)
 
     val podkategorie = subRepo.getByCategory(catId)
-    podkategorie.map( subcategories => Ok(Json.toJson(subcategories, categ)))
+    podkategorie.map( subcategories => Ok(Json.toJson(subcategories)))
   }
 
   def addSubcategoryJson: Action[AnyContent] = Action { implicit request =>

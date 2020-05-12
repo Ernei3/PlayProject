@@ -128,7 +128,6 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
 
     val adr = Await.result(address, Duration.Inf)
     zamowienie.map( order => orderRepo.update(order.id, Order(order.id, order.user, order.status, adr.id)))
-    //Redirect(routes.PaymentController.addPayment(orderad.order))
     Redirect("/ordersJson/"+orderId)
 
   }

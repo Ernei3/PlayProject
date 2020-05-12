@@ -114,6 +114,7 @@ GET         /dropOrder/:id                  controllers.OrderController.dropOrde
 
 GET         /allOrdersJson                  controllers.OrderController.allOrdersJson
 GET         /ordersJson/:userId             controllers.OrderController.ordersJson(userId: Int)
+GET         /orderDetailsJson/:id           controllers.OrderController.orderDetailsJson(id: Int)
 POST        /addOrderJson                   controllers.OrderController.addOrderJson
 GET         /updateOrderMenuJson/:id        controllers.OrderController.updateOrderMenuJson(id: Int)
 PUT         /updateOrderJson                controllers.OrderController.updateOrderJson

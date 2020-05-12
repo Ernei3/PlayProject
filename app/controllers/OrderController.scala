@@ -103,7 +103,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
 
   def ordersJson(userId: Int) = Action.async { implicit request =>
     val zamowienia = orderRepo.getByUser(userId)
-    zamowienia.map( orders => Ok(Json.toJson(orders, userId)))
+    zamowienia.map( orders => Ok(Json.toJson(orders)))
   }
 
   def allOrdersJson = Action.async { implicit request =>
@@ -111,26 +111,17 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     zamowienia.map( orders => Ok(Json.toJson(orders)))
   }
 
+  def orderDetailsJson(id: Int) = Action.async {
+    val zamowienia = orderRepo.getById(id)
+    zamowienia.map( order => Ok(Json.toJson(order)))
+  }
+
   def addOrderJson = Action.async { implicit request =>
 
     val order:Order = request.body.asJson.get.as[Order]
 
-    val produkty = productRepo.list()
-    val koszyk = basketRepo.getByUser(order.user)
-
     val zamowienie = orderRepo.create(order.user, order.status, order.address)
-    var priceSum = 0
-
-    val prod = Await.result(produkty, Duration.Inf)
-    val bask = Await.result(koszyk, Duration.Inf)
-
-    for(ba <- bask) {
-      if(prod.exists(_.id == ba.product)){
-        priceSum += prod.find(_.id == ba.product).get.price * ba.quantity
-      }
-    }
-
-    zamowienie.map(ord => Ok(Json.toJson(ord, prod, bask, priceSum)))
+    zamowienie.map(ord => Ok(Json.toJson(ord)))
   }
 
   def updateOrderMenuJson(id: Integer) = Action.async { implicit request =>

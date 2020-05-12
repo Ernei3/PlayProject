@@ -117,7 +117,7 @@ class OrderProdController @Inject()(orderProdRepo:OrderProdRepository, orderRepo
   def orderedProductsJson(orderId: Int) = Action.async { implicit request =>
 
     val produkty = orderProdRepo.getByOrder(orderId)
-    produkty.map(orderprod => Ok(Json.toJson(orderprod, orderId)))
+    produkty.map(orderprod => Ok(Json.toJson(orderprod)))
   }
 
   def allOrderedProductsJson = Action.async { implicit request =>

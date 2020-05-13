@@ -18,7 +18,7 @@ class SubcategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def category = column[Int]("category")
-    private def category_fk = foreignKey("cat_fk",category, cat)(_.id)
+    private def categoryFk = foreignKey("cat_fk",category, cat)(_.id)
 
     def * = (id, name, category) <> ((Subcategory.apply _).tupled, Subcategory.unapply)
 
@@ -41,8 +41,8 @@ class SubcategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
     subcategory.result
   }
 
-  def getByCategory(category_id: Int): Future[Seq[Subcategory]] = db.run {
-    subcategory.filter(_.category === category_id).result
+  def getByCategory(categoryId: Int): Future[Seq[Subcategory]] = db.run {
+    subcategory.filter(_.category === categoryId).result
   }
 
   def getById(id: Int): Future[Subcategory] = db.run {
@@ -53,14 +53,14 @@ class SubcategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,
     subcategory.filter(_.id === id).result.headOption
   }
 
-  def getByCategories(category_ids: List[Int]): Future[Seq[Subcategory]] = db.run {
-    subcategory.filter(_.category inSet category_ids).result
+  def getByCategories(categoryIds: List[Int]): Future[Seq[Subcategory]] = db.run {
+    subcategory.filter(_.category inSet categoryIds).result
   }
 
   def delete(id: Int): Future[Unit] = db.run(subcategory.filter(_.id === id).delete).map(_ => ())
 
-  def update(id: Int, new_subcategory: Subcategory): Future[Unit] = {
-    val subToUpdate: Subcategory = new_subcategory.copy(id)
+  def update(id: Int, newSubcategory: Subcategory): Future[Unit] = {
+    val subToUpdate: Subcategory = newSubcategory.copy(id)
     db.run(subcategory.filter(_.id === id).update(subToUpdate)).map(_ => ())
   }
 

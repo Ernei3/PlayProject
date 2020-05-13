@@ -20,7 +20,7 @@ class OrderProdRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, or
     def price = column[Int]("price")
     def quantity = column[Int]("quantity")
     def order = column[Int]("order")
-    private def order_fk = foreignKey("ord_fk",order, ord)(_.id)
+    private def orderFk = foreignKey("ord_fk",order, ord)(_.id)
 
     def * = (id, name, price, quantity, order) <> ((OrderProd.apply _).tupled, OrderProd.unapply)
 
@@ -44,8 +44,8 @@ class OrderProdRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, or
     orderprod.result
   }
 
-  def getByOrder(order_id: Int): Future[Seq[OrderProd]] = db.run {
-    orderprod.filter(_.order === order_id).result
+  def getByOrder(orderId: Int): Future[Seq[OrderProd]] = db.run {
+    orderprod.filter(_.order === orderId).result
   }
 
   def getById(id: Int): Future[OrderProd] = db.run {
@@ -58,8 +58,8 @@ class OrderProdRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, or
 
   def delete(id: Int): Future[Unit] = db.run(orderprod.filter(_.id === id).delete).map(_ => ())
 
-  def update(id: Int, new_orderprod: OrderProd): Future[Unit] = {
-    val orderprodToUpdate: OrderProd = new_orderprod.copy(id)
+  def update(id: Int, newOrderprod: OrderProd): Future[Unit] = {
+    val orderprodToUpdate: OrderProd = newOrderprod.copy(id)
     db.run(orderprod.filter(_.id === id).update(orderprodToUpdate)).map(_ => ())
   }
 

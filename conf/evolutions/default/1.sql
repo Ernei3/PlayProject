@@ -76,7 +76,7 @@ CREATE TABLE "payment" (
    "number" VARCHAR NOT NULL,
    "name" VARCHAR NOT NULL,
    "date" VARCHAR NOT NULL,
-   "code" INT NOT NULL,
+   "code" VARCHAR NOT NULL,
    "order" INT NOT NULL,
    FOREIGN KEY("order") references "order"(id)
 );

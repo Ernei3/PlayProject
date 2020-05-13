@@ -18,7 +18,7 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, order
     def user = column[Int]("user")
     def status = column[String]("status")
     def address = column[Int]("address")
-    private def address_fk = foreignKey("address_fk", address, orderad)(_.id)
+    private def addressFk = foreignKey("address_fk", address, orderad)(_.id)
     def * = (id, user, status, address) <> ((Order.apply _).tupled, Order.unapply)
   }
 
@@ -38,8 +38,8 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, order
     order.result
   }
 
-  def getByUser(user_id: Int): Future[Seq[Order]] = db.run {
-    order.filter(_.user === user_id).result
+  def getByUser(userId: Int): Future[Seq[Order]] = db.run {
+    order.filter(_.user === userId).result
   }
 
   def getById(id: Int): Future[Order] = db.run {
@@ -53,8 +53,8 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, order
 
   def delete(id: Int): Future[Unit] = db.run(order.filter(_.id === id).delete).map(_ => ())
 
-  def update(id: Int, new_order: Order): Future[Unit] = {
-    val orderToUpdate: Order = new_order.copy(id)
+  def update(id: Int, newOrder: Order): Future[Unit] = {
+    val orderToUpdate: Order = newOrder.copy(id)
     db.run(order.filter(_.id === id).update(orderToUpdate)).map(_ => ())
   }
 

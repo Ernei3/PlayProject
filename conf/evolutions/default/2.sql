@@ -43,8 +43,8 @@ INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "K
 INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "Warsaw", "Lwowska", "21/3");
 
 
-INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("1111111111111111", "Ala Makota", "2/25", 111, 1);
-INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("2222222222222222", "Jan Kowalski", "2/25", 222, 2);
+INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("1111111111111111", "Ala Makota", "2/25", "011", 1);
+INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("2222222222222222", "Jan Kowalski", "2/25", "222", 2);
 
 # --- !Downs
 

@@ -16,15 +16,10 @@ class WishlistRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, pr
   class WishlistTable(tag: Tag) extends Table[Wishlist](tag, "wishlist") {
 
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-
     def user = column[Int]("user")
-
     def quantity = column[Int]("quantity")
-
     def product = column[Int]("product")
-
-    private def product_fk = foreignKey("prod_fk", product, prod)(_.id)
-
+    private def productFk = foreignKey("prod_fk", product, prod)(_.id)
     def * = (id, user, quantity, product) <> ((Wishlist.apply _).tupled, Wishlist.unapply)
 
   }
@@ -45,8 +40,8 @@ class WishlistRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, pr
       wishlist.result
     }
 
-    def getByUser(user_id: Int): Future[Seq[Wishlist]] = db.run {
-      wishlist.filter(_.user === user_id).result
+    def getByUser(userId: Int): Future[Seq[Wishlist]] = db.run {
+      wishlist.filter(_.user === userId).result
     }
 
     def getById(id: Int): Future[Wishlist] = db.run {
@@ -59,8 +54,8 @@ class WishlistRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, pr
 
     def delete(id: Int): Future[Unit] = db.run(wishlist.filter(_.id === id).delete).map(_ => ())
 
-    def update(id: Int, new_wish: Wishlist): Future[Unit] = {
-      val wishToUpdate: Wishlist = new_wish.copy(id)
+    def update(id: Int, newWish: Wishlist): Future[Unit] = {
+      val wishToUpdate: Wishlist = newWish.copy(id)
       db.run(wishlist.filter(_.id === id).update(wishToUpdate)).map(_ => ())
     }
 

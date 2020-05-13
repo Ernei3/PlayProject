@@ -21,7 +21,7 @@ class PaymentRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, orde
     def date = column[String]("date")
     def code = column[String]("code")
     def order = column[Int]("order")
-    private def order_fk = foreignKey("ord_fk",order, ord)(_.id)
+    private def orderFk = foreignKey("ord_fk",order, ord)(_.id)
 
     def * = (id, number, name, date, code, order) <> ((Payment.apply _).tupled, Payment.unapply)
 
@@ -45,8 +45,8 @@ class PaymentRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, orde
     payment.result
   }
 
-  def getByOrder(order_id: Int): Future[Seq[Payment]] = db.run {
-    payment.filter(_.order === order_id).result
+  def getByOrder(orderId: Int): Future[Seq[Payment]] = db.run {
+    payment.filter(_.order === orderId).result
   }
 
   def getById(id: Int): Future[Payment] = db.run {
@@ -59,8 +59,8 @@ class PaymentRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, orde
 
   def delete(id: Int): Future[Unit] = db.run(payment.filter(_.id === id).delete).map(_ => ())
 
-  def update(id: Int, new_payment: Payment): Future[Unit] = {
-    val paymentToUpdate: Payment = new_payment.copy(id)
+  def update(id: Int, newPayment: Payment): Future[Unit] = {
+    val paymentToUpdate: Payment = newPayment.copy(id)
     db.run(payment.filter(_.id === id).update(paymentToUpdate)).map(_ => ())
   }
 

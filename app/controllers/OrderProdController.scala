@@ -7,7 +7,8 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -47,11 +48,8 @@ class OrderProdController @Inject()(orderProdRepo:OrderProdRepository, orderRepo
 
   def addToOrder = Action.async { implicit request =>
 
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
 
     addToOrderForm.bindFromRequest.fold(
@@ -129,11 +127,8 @@ class OrderProdController @Inject()(orderProdRepo:OrderProdRepository, orderRepo
 
     val order:Order = request.body.asJson.get.as[Order]
 
-    var prod: Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete {
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val koszyk = basketRepo.getByUser(order.user)
 

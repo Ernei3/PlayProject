@@ -7,7 +7,8 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -34,22 +35,16 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
   }
 
   def basket(userId: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val koszyk = basketRepo.getByUser(userId)
     koszyk.map( baskets => Ok(views.html.basket(baskets, prod, userId, updateBasketForm)))
   }
 
   def allBaskets = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val koszyk = basketRepo.list()
     koszyk.map( baskets => Ok(views.html.allBaskets(baskets, prod, updateBasketForm)))
@@ -77,17 +72,11 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
 
 
   def updateBasket = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
-    var bask:Seq[Basket] = Seq[Basket]()
-    val koszyk = basketRepo.list().onComplete{
-      case Success(b) => bask = b
-      case Failure(_) => print("fail")
-    }
+    val koszyk = basketRepo.list()
+    val bask = Await.result(koszyk, Duration.Inf)
 
     updateBasketForm.bindFromRequest.fold(
       errorForm => {
@@ -115,14 +104,9 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
   }
 
   def allBasketsJson = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
 
     val koszyk = basketRepo.list()
-    koszyk.map( baskets => Ok(Json.toJson(baskets, prod)))
+    koszyk.map( baskets => Ok(Json.toJson(baskets)))
   }
 
   def addToBasketJson: Action[AnyContent] = Action { implicit request =>

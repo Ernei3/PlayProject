@@ -36,11 +36,8 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
 
 
   def allReviews = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val recenzje = reviewRepo.list()
     recenzje.map( reviews => Ok(views.html.allReviews(reviews, prod)))
@@ -76,11 +73,8 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
   }
 
   def updateReviewMenu(id: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val recenzja = reviewRepo.getById(id)
     recenzja.map(review => {
@@ -90,11 +84,8 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
   }
 
   def updateReview = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     updateReviewForm.bindFromRequest.fold(
       errorForm => {
@@ -124,14 +115,9 @@ class ReviewController @Inject()(reviewRepo: ReviewRepository, productRepo: Prod
   }
 
   def getAllReviewsJson = Action.async {
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
 
     val recenzje = reviewRepo.list()
-    recenzje.map( reviews => Ok(Json.toJson(reviews, prod)))
+    recenzje.map( reviews => Ok(Json.toJson(reviews)))
 
   }
 

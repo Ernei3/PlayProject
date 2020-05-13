@@ -37,11 +37,8 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
   }
 
   def products: Action[AnyContent] = Action.async { implicit request =>
-    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
-    val podkategorie = subRepo.list().onComplete{
-      case Success(sub) => subcateg = sub
-      case Failure(_) => print("fail")
-    }
+    val podkategorie = subRepo.list()
+    val subcateg = Await.result(podkategorie, Duration.Inf)
 
     val produkty = productsRepo.list()
     produkty.map( products => Ok(views.html.products(products, subcateg)))
@@ -70,11 +67,8 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
   }
 
   def addProduct: Action[AnyContent] = Action.async { implicit request =>
-    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
-    val subcategories = subRepo.list().onComplete{
-      case Success(sub) => subcateg = sub
-      case Failure(_) => print("fail")
-    }
+    val podkategorie = subRepo.list()
+    val subcateg = Await.result(podkategorie, Duration.Inf)
 
     productForm.bindFromRequest.fold(
       errorForm => {
@@ -91,11 +85,8 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
   }
 
   def updateProductMenu(id: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
-    val subcategories = subRepo.list().onComplete{
-      case Success(sub) => subcateg = sub
-      case Failure(_) => print("fail")
-    }
+    val podkategorie = subRepo.list()
+    val subcateg = Await.result(podkategorie, Duration.Inf)
 
     val produkt = productsRepo.getById(id)
     produkt.map(product => {
@@ -105,11 +96,8 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
   }
 
   def updateProduct = Action.async { implicit request =>
-    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
-    val subcategories = subRepo.list().onComplete{
-      case Success(sub) => subcateg = sub
-      case Failure(_) => print("fail")
-    }
+    val podkategorie = subRepo.list()
+    val subcateg = Await.result(podkategorie, Duration.Inf)
 
     updateProductForm.bindFromRequest.fold(
       errorForm => {
@@ -160,14 +148,8 @@ class ProductController @Inject()(productsRepo: ProductRepository, subRepo: Subc
   }
 
   def updateProductMenuJson(id: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var subcateg:Seq[Subcategory] = Seq[Subcategory]()
-    val subcategories = subRepo.list().onComplete{
-      case Success(sub) => subcateg = sub
-      case Failure(_) => print("fail")
-    }
-
     val produkt = productsRepo.getById(id)
-    produkt.map(product => Ok(Json.toJson(product, subcateg)))
+    produkt.map(product => Ok(Json.toJson(product)))
   }
 
   def updateProductJson: Action[AnyContent] = Action { implicit request =>

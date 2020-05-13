@@ -7,7 +7,8 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
@@ -35,22 +36,16 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
 
 
   def wishlist(userId: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val listy = wishRepo.getByUser(userId)
     listy.map( wishlists => Ok(views.html.wishlist(wishlists, prod, userId, updateWishForm)))
   }
 
   def allWishes = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val listy = wishRepo.list()
     listy.map( wishlists => Ok(views.html.allWishes(wishlists, prod, updateWishForm)))
@@ -78,18 +73,12 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
   }
 
   def updateWishlist = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val listy = wishRepo.list()
 
-    var wish:Seq[Wishlist] = Seq[Wishlist]()
-    val listy = wishRepo.list().onComplete{
-      case Success(w) => wish = w
-      case Failure(_) => print("fail")
-    }
-
+    val prod = Await.result(produkty, Duration.Inf)
+    val wish = Await.result(listy, Duration.Inf)
+    
     updateWishForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(
@@ -118,11 +107,8 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
   }
 
   def allWishesJson = Action.async { implicit request =>
-    var prod:Seq[Product] = Seq[Product]()
-    val produkty = productRepo.list().onComplete{
-      case Success(p) => prod = p
-      case Failure(_) => print("fail")
-    }
+    val produkty = productRepo.list()
+    val prod = Await.result(produkty, Duration.Inf)
 
     val listy = wishRepo.list()
     listy.map( wishlists => Ok(Json.toJson(wishlists, prod)))

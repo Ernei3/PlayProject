@@ -78,7 +78,7 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
 
     val prod = Await.result(produkty, Duration.Inf)
     val wish = Await.result(listy, Duration.Inf)
-    
+
     updateWishForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(

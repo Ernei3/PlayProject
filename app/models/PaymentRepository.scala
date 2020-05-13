@@ -19,7 +19,7 @@ class PaymentRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, orde
     def number = column[String]("number")
     def name = column[String]("name")
     def date = column[String]("date")
-    def code = column[Int]("code")
+    def code = column[String]("code")
     def order = column[Int]("order")
     private def order_fk = foreignKey("ord_fk",order, ord)(_.id)
 
@@ -33,7 +33,7 @@ class PaymentRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, orde
   private val ord = TableQuery[OrderTable]
 
 
-  def create(number: String, name: String, date: String, code: Int, order: Int ): Future[Payment] = db.run {
+  def create(number: String, name: String, date: String, code: String, order: Int ): Future[Payment] = db.run {
     (payment.map(p => (p.number, p.name, p.date, p.code, p.order))
       returning payment.map(_.id)
       into {case ((number, name, date, code, order),id) => Payment(id, number, name, date, code, order)}

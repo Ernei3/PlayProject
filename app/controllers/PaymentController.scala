@@ -21,7 +21,7 @@ class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:Orde
       "number" -> nonEmptyText,
       "name" -> nonEmptyText,
       "date" -> nonEmptyText,
-      "code" -> number,
+      "code" -> nonEmptyText,
       "order" -> number
     )(AddPaymentForm.apply)(AddPaymentForm.unapply)
   }
@@ -32,7 +32,7 @@ class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:Orde
       "number" -> nonEmptyText,
       "name" -> nonEmptyText,
       "date" -> nonEmptyText,
-      "code" -> number,
+      "code" -> nonEmptyText,
       "order" -> number
     )(UpdatePaymentForm.apply)(UpdatePaymentForm.unapply)
   }
@@ -113,7 +113,7 @@ class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:Orde
   def paymentJson(orderId: Int) = Action.async { implicit request =>
 
     val zaplaty = paymentRepo.getByOrder(orderId)
-    zaplaty.map(payment => Ok(Json.toJson(payment, orderId)))
+    zaplaty.map(payment => Ok(Json.toJson(payment)))
   }
 
   def sendPaymentJson = Action { implicit request =>
@@ -144,5 +144,5 @@ class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:Orde
 }
 
 
-case class AddPaymentForm(number: String, name: String, date: String, code: Int, order: Int )
-case class UpdatePaymentForm(id: Int, number: String, name: String, date: String, code: Int, order: Int )
+case class AddPaymentForm(number: String, name: String, date: String, code: String, order: Int )
+case class UpdatePaymentForm(id: Int, number: String, name: String, date: String, code: String, order: Int )

@@ -167,8 +167,11 @@ GET         /paymentJson/:orderId           controllers.PaymentController.paymen
 POST        /sendPaymentJson                controllers.PaymentController.sendPaymentJson
 GET         /changePaymentMenuJson/:id      controllers.PaymentController.changePaymentMenuJson(id: Int)
 PUT         /changePaymentJson              controllers.PaymentController.changePaymentJson
-DELETE      /removePaymentJson               controllers.PaymentController.removePaymentJson
+DELETE      /removePaymentJson              controllers.PaymentController.removePaymentJson
 
+
+
+#GET         /authenticate/:provider         controllers.SocialAuthController.authenticate(provider)
 
 
 

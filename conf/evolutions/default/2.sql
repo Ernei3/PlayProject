@@ -76,10 +76,10 @@ DELETE FROM "basket" WHERE id=1;
 DELETE FROM "basket" WHERE id=2;
 DELETE FROM "basket" WHERE id=3;
 
-DELETE "order" WHERE id=1;
-DELETE "order" WHERE id=2;
+DELETE FROM "order" WHERE id=1;
+DELETE FROM "order" WHERE id=2;
 
 
 
-DELETE "orderprod" WHERE id=1;
-DELETE "orderad" WHERE id=1;
+DELETE FROM "orderprod" WHERE id=1;
+DELETE FROM "orderad" WHERE id=1;

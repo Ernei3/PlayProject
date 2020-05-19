@@ -2,7 +2,7 @@ package models.daos
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import javax.inject.Inject
-import models.User
+import models.{User, UserRoles}
 import play.api.db.slick.DatabaseConfigProvider
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -10,7 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
  * Give access to the user object.
  */
-class UserDAOImpl @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) extends UserDAO with DAOSlick {
+class UserDAOImpl @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, userRoleDAO: UserRoleDAO)(implicit ec: ExecutionContext) extends UserDAO with DAOSlick {
   import profile.api._
 
   /**
@@ -27,7 +27,7 @@ class UserDAOImpl @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
     } yield dbUser
     db.run(userQuery.result.headOption).map { dbUserOption =>
       dbUserOption.map { user =>
-        User(user.id, user.firstName, user.lastName, user.email, user.password)
+        User(user.id, user.firstName, user.lastName, user.email, user.password, UserRoles(user.role))
       }
     }
   }
@@ -53,7 +53,14 @@ class UserDAOImpl @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
    * @return The saved user.
    */
   def save(user: User): Future[User] = {
-    db.run(slickUsers.insertOrUpdate(DBUser(user.id, user.firstName, user.lastName, user.email, user.password))).map(_ => user)
+    // combine database actions to be run sequentially
+    val actions = (for {
+      userRoleId <- userRoleDAO.getUserRole()
+      dbUser = DBUser(user.id, user.firstName, user.lastName, user.email, user.password, userRoleId)
+      _ <- slickUsers.insertOrUpdate(dbUser)
+    } yield ()).transactionally
+    // run actions and return user afterwards
+    db.run(actions).map(_ => user)
   }
 
 
@@ -66,4 +73,17 @@ class UserDAOImpl @Inject() (protected val dbConfigProvider: DatabaseConfigProvi
   def findByEmail(email: String): Future[Option[User]] = {
     db.run(slickUsers.filter(_.email === email).take(1).result.headOption).map(_ map DBUser.toUser)
   }
+
+  /**
+   * Updates user role
+   *
+   * @param userId user id
+   * @param role   user role to update to
+   * @return
+   */
+  override def updateUserRole(userId: Int, role: UserRoles.UserRole): Future[Boolean] = {
+    db.run(slickUsers.filter(_.id === userId).map(_.role).update(role.id)).map(_ > 0)
+  }
+
+
 }

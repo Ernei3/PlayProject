@@ -5,12 +5,8 @@ import play.api.libs.json._
 
 
 case class User(id: Int,
-                email: String,
                 firstName: String,
+                email: String,
                 lastName: String,
-                password: String) extends Identity
-
-
-object User {
-  implicit val userFormat: OFormat[User] = Json.format[User]
-}
+                password: String,
+                role: UserRoles.UserRole) extends Identity

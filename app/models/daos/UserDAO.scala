@@ -1,7 +1,7 @@
 package models.daos
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import models.User
+import models.{User, UserRoles}
 
 import scala.concurrent.Future
 
@@ -9,7 +9,14 @@ import scala.concurrent.Future
  * Give access to the user object.
  */
 trait UserDAO {
-
+  /**
+   * Updates user role
+   *
+   * @param userId user id
+   * @param role   user role to update to
+   * @return
+   */
+  def updateUserRole(userId: Int, role: UserRoles.Value): Future[Boolean]
 
   /**
    * Finds a user by its login info.

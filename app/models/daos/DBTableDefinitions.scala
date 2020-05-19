@@ -1,7 +1,7 @@
 package models.daos
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import models.User
+import models.{User, UserRoles}
 import slick.jdbc.JdbcProfile
 import slick.lifted.ProvenShape.proveShapeOf
 
@@ -12,18 +12,26 @@ trait DBTableDefinitions {
 
   case class DBUserRole(id: Int, name: String)
 
-  case class DBUser(id: Int,
-                    email: String,
-                    firstName: String,
-                    lastName: String,
-                    password: String)
-
-  object DBUser {
-    def toUser(u: DBUser): User = User(u.id, u.firstName, u.lastName, u.email, u.password)
-    def fromUser(u: User): DBUser = DBUser(u.id, u.firstName, u.lastName, u.email, u.password)
+  class UserRoles(tag: Tag) extends Table[DBUserRole](tag, "role") {
+    def id = column[Int]("id", O.PrimaryKey)
+    def name = column[String]("name")
+    def * = (id, name) <> (DBUserRole.tupled, DBUserRole.unapply)
   }
 
-  class Users(tag: Tag) extends Table[DBUser](tag, Some("auth"), "user") {
+
+  case class DBUser(id: Int,
+                    firstName: String,
+                    lastName: String,
+                    email: String,
+                    password: String,
+                    role: Int)
+
+  object DBUser {
+    def toUser(u: DBUser): User = User(u.id, u.firstName, u.lastName, u.email, u.password, UserRoles(u.role))
+    def fromUser(u: User): DBUser = DBUser(u.id, u.firstName, u.lastName, u.email, u.password, u.role.id)
+  }
+
+  class Users(tag: Tag) extends Table[DBUser](tag,"user") {
     //import MyPostgresProfile.api._
 
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
@@ -31,7 +39,8 @@ trait DBTableDefinitions {
     def firstName = column[String]("firstName")
     def lastName = column[String]("lastName")
     def password = column[String]("password")
-    def * = (id, firstName, lastName, email, password) <> ((DBUser.apply _).tupled, DBUser.unapply)
+    def role = column[Int]("role_id")
+    def * = (id, firstName, lastName, email, password, role) <> ((DBUser.apply _).tupled, DBUser.unapply)
   }
 
   case class DBLoginInfo(id: Option[Int], providerID: String, providerKey: String)
@@ -40,7 +49,7 @@ trait DBTableDefinitions {
     def toLoginInfo(dbLoginInfo: DBLoginInfo): LoginInfo = LoginInfo(dbLoginInfo.providerID, dbLoginInfo.providerKey)
   }
 
-  class LoginInfos(tag: Tag) extends Table[DBLoginInfo](tag, Some("auth"), "login_info") {
+  class LoginInfos(tag: Tag) extends Table[DBLoginInfo](tag, "login_info") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def providerID = column[String]("provider_id")
     def providerKey = column[String]("provider_key")
@@ -52,7 +61,7 @@ trait DBTableDefinitions {
                               loginInfoId: Int
                             )
 
-  class UserLoginInfos(tag: Tag) extends Table[DBUserLoginInfo](tag, Some("auth"), "user_login_info") {
+  class UserLoginInfos(tag: Tag) extends Table[DBUserLoginInfo](tag, "user_login_info") {
     def userID = column[Int]("user_id")
     def loginInfoId = column[Int]("login_info_id")
     def * = (userID, loginInfoId) <> (DBUserLoginInfo.tupled, DBUserLoginInfo.unapply)
@@ -67,7 +76,7 @@ trait DBTableDefinitions {
                            loginInfoId: Int
                          )
 
-  class OAuth2Infos(tag: Tag) extends Table[DBOAuth2Info](tag, Some("auth"), "oauth2_info") {
+  class OAuth2Infos(tag: Tag) extends Table[DBOAuth2Info](tag, "oauth2_info") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def accessToken = column[String]("access_token")
     def tokenType = column[Option[String]]("token_type")
@@ -79,6 +88,7 @@ trait DBTableDefinitions {
 
 
   // table query definitions
+  val slickUserRoles = TableQuery[UserRoles]
   val slickUsers = TableQuery[Users]
   val slickLoginInfos = TableQuery[LoginInfos]
   val slickUserLoginInfos = TableQuery[UserLoginInfos]

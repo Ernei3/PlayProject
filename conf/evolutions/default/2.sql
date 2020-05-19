@@ -78,8 +78,14 @@ DELETE FROM "basket" WHERE id=3;
 
 DELETE FROM "order" WHERE id=1;
 DELETE FROM "order" WHERE id=2;
-
-
+DELETE FROM "order" WHERE id=3;
+DELETE FROM "order" WHERE id=4;
 
 DELETE FROM "orderprod" WHERE id=1;
+
 DELETE FROM "orderad" WHERE id=1;
+DELETE FROM "orderad" WHERE id=2;
+
+DELETE FROM "payment" WHERE id=1;
+DELETE FROM "payment" WHERE id=2;
+DELETE FROM "payment" WHERE id=3;

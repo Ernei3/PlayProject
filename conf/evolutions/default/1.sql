@@ -1,12 +1,25 @@
 
 # --- !Ups
 
+CREATE TABLE role (
+   id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR
+);
+
+INSERT INTO role(name)
+VALUES ('user'),
+       ('admin');
+
 CREATE TABLE "user" (
  id INTEGER PRIMARY KEY,
  email TEXT NOT NULL UNIQUE,
  first_name TEXT NOT NULL,
  last_name TEXT NOT NULL,
- password TEXT NOT NULL
+ password TEXT NOT NULL,
+ role_id INT NOT NULL,
+ FOREIGN KEY (role_id) REFERENCES role (id)
+     ON UPDATE CASCADE
+     ON DELETE RESTRICT
 );
 
 CREATE TABLE "login_info" (
@@ -153,3 +166,4 @@ DROP TABLE oauth2_info;
 DROP TABLE user_login_info;
 DROP TABLE login_info;
 DROP TABLE user;
+DROP TABLE role;

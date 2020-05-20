@@ -42,7 +42,7 @@ class SocialAuthController @Inject()(components: ControllerComponents,
             }
           } yield result
         }
-      case _ => Future.failed(new ProviderException(s"Cannot authenticate with unexpected social provider $provider"))
+      case _ => Future.failed(new ProviderException("Cannot authenticate with unexpected social provider $provider"))
     }).recover {
       case e: ProviderException =>
         logger.error("Unexpected provider error", e)
@@ -50,3 +50,4 @@ class SocialAuthController @Inject()(components: ControllerComponents,
     }
   }
 }
+

@@ -170,13 +170,14 @@ PUT         /changePaymentJson              controllers.PaymentController.change
 DELETE      /removePaymentJson              controllers.PaymentController.removePaymentJson
 
 
+#Auth
+GET     /authenticate/:provider             auth.SocialAuthController.authenticate(provider)
+GET     /api/user/role                      auth.UserManagerController.userRoles()
+POST    /api/user/:userId/role              auth.UserManagerController.changeUserRole(userId: java.util.UUID)
 
-#GET         /authenticate/:provider         controllers.SocialAuthController.authenticate(provider)
-
+GET     /$any<.*>                           controllers.HomeController.reactApp(any)
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-
-
       

@@ -1,31 +1,24 @@
-package models.daos
+package models.auth.dao
+
+import java.util.UUID
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import javax.inject.Inject
-import models.User
+import models.auth.User
 import play.api.db.slick.DatabaseConfigProvider
 
 import scala.concurrent.{ExecutionContext, Future}
 
-/**
- * Give access to the user object.
- */
+
 class LoginInfoDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider
                                 )(implicit ec: ExecutionContext) extends LoginInfoDAO with DAOSlick {
+
   import profile.api._
 
-  /**
-   * Saves a login info for user
-   *
-   * @param userID The user id.
-   * @param loginInfo login info
-   * @return unit
-   */
-  override def saveUserLoginInfo(userID: Int, loginInfo: LoginInfo): Future[Unit] = {
+  override def saveUserLoginInfo(userID: UUID, loginInfo: LoginInfo): Future[Unit] = {
 
     val dbLoginInfo = DBLoginInfo(None, loginInfo.providerID, loginInfo.providerKey)
-    // We don't have the LoginInfo id so we try to get it first.
-    // If there is no LoginInfo yet for this user we retrieve the id on insertion.
+
     val loginInfoAction = {
       val retrieveLoginInfo = slickLoginInfos.filter(
         info => info.providerID === loginInfo.providerID &&
@@ -38,15 +31,13 @@ class LoginInfoDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigP
       } yield dbLoginInfo
     }
 
-    // combine database actions to be run sequentially
     val actions = (for {
       dbLoginInfo <- loginInfoAction
-      userLoginInfo = DBUserLoginInfo(userID, dbLoginInfo.id.get)
+      userLoginInfo = DBUserLoginInfo(userID.toString, dbLoginInfo.id.get)
       exists <- existsUserLoginInfo(userLoginInfo)
       _ <- if (exists) DBIO.successful(()) else slickUserLoginInfos += userLoginInfo
     } yield ()).transactionally
 
-    // run actions and return user afterwards
     db.run(actions)
   }
 
@@ -54,16 +45,9 @@ class LoginInfoDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigP
     slickUserLoginInfos.filter(e => e.loginInfoId === uli.loginInfoId && e.userID === uli.userID).exists.result
   }
 
-  /**
-   * Finds a user, login info pair by userID and login info providerID
-   *
-   * @param userId     user id
-   * @param providerId provider id
-   * @return Some(User, LoginInfo) if there is a user by userId which has login method for provider by provider ID, otherwise None
-   */
-  def find(userId: Int, providerId: String): Future[Option[(User, LoginInfo)]] = {
+  def find(userId: UUID, providerId: String): Future[Option[(User, LoginInfo)]] = {
     val action = for {
-      ((_, li), u) <- slickUserLoginInfos.filter(_.userID === userId)
+      ((_, li), u) <- slickUserLoginInfos.filter(_.userID === userId.toString)
         .join(slickLoginInfos).on(_.loginInfoId === _.id)
         .join(slickUsers).on(_._1.userID === _.id)
 
@@ -73,12 +57,6 @@ class LoginInfoDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigP
     db.run(action.result.headOption).map(_.map{case (u, li) => (DBUser.toUser(u), DBLoginInfo.toLoginInfo(li))})
   }
 
-  /**
-   * Get list of user authentication methods providers
-   *
-   * @param email user email
-   * @return
-   */
   override def getAuthenticationProviders(email: String): Future[Seq[String]] = {
     val action = for {
       ((_, _), li) <- slickUsers.filter(_.email === email)

@@ -21,7 +21,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
   val updateOrderForm: Form[UpdateOrderForm] = Form {
     mapping(
       "id" -> number,
-      "user" -> number,
+      "user" -> nonEmptyText,
       "status" -> nonEmptyText,
       "address" -> number
     )(UpdateOrderForm.apply)(UpdateOrderForm.unapply)
@@ -29,7 +29,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
 
 
 
-  def orders(userId: Int) = Action.async { implicit request =>
+  def orders(userId: String) = Action.async { implicit request =>
     val zamowienia = orderRepo.getByUser(userId)
     zamowienia.map( orders => Ok(views.html.order(orders, userId)))
   }
@@ -46,7 +46,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     zamowienia.map( order => Ok(views.html.orderDetails(order)))
   }
 
-  def addOrder(userId: Int) = Action.async { implicit request =>
+  def addOrder(userId: String) = Action.async { implicit request =>
 
     val produkty = productRepo.list()
     val koszyk = basketRepo.getByUser(userId)
@@ -101,7 +101,7 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
   }
 
 
-  def ordersJson(userId: Int) = Action.async { implicit request =>
+  def ordersJson(userId: String) = Action.async { implicit request =>
     val zamowienia = orderRepo.getByUser(userId)
     zamowienia.map( orders => Ok(Json.toJson(orders)))
   }
@@ -148,4 +148,4 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
 }
 
 
-case class UpdateOrderForm(id: Int, user: Int, status: String, address: Int)
+case class UpdateOrderForm(id: Int, user: String, status: String, address: Int)

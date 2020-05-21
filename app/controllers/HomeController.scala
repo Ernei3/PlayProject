@@ -27,8 +27,6 @@ class HomeController @Inject()(components: ControllerComponents,
     Ok(views.html.index("Main Page"))
   }
 
-  def reactApp(path: String): Action[AnyContent] = TODO
-
   /*silhouette.UserAwareAction.async { implicit request =>
   fetchWebpackServer(path)
 }*/

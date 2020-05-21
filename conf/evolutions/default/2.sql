@@ -22,35 +22,34 @@ INSERT INTO "product"("name", "description", "price", "subcategory") VALUES ("Pr
 INSERT INTO "review"("title", "content", "product") VALUES ("Brilliant!", "Amazing and outstanding!", 1);
 INSERT INTO "review"("title", "content", "product") VALUES ("Best book ever!", "I've never read anything better!", 1);
 
-INSERT INTO "wishlist"("user", "quantity", "product") VALUES (1, 1, 1);
-INSERT INTO "wishlist"("user", "quantity", "product") VALUES (1, 1, 2);
-INSERT INTO "wishlist"("user", "quantity", "product") VALUES (2, 3, 3);
+INSERT INTO "user"("id", "first_name", "last_name", "email", "role_id", "avatar_url") VALUES ("a", "Example1", "example1", "example1@example.com", 1, "example.com");
+INSERT INTO "user"("id", "first_name", "last_name", "email", "role_id", "avatar_url") VALUES ("b", "Example2", "example2", "example2@example.com", 1, "example.com");
 
-INSERT INTO "basket"("user", "quantity", "product") VALUES (1, 4, 4);
-INSERT INTO "basket"("user", "quantity", "product") VALUES (2, 1, 2);
-INSERT INTO "basket"("user", "quantity", "product") VALUES (2, 2, 1);
-INSERT INTO "basket"("user", "quantity", "product") VALUES (3, 1, 1);
-INSERT INTO "basket"("user", "quantity", "product") VALUES (3, 2, 4);
-INSERT INTO "basket"("user", "quantity", "product") VALUES (3, 2, 5);
+INSERT INTO "wishlist"("user", "quantity", "product") VALUES ("a", 1, 1);
+INSERT INTO "wishlist"("user", "quantity", "product") VALUES ("a", 1, 2);
+INSERT INTO "wishlist"("user", "quantity", "product") VALUES ("b", 3, 3);
 
+INSERT INTO "basket"("user", "quantity", "product") VALUES ("a", 4, 4);
+INSERT INTO "basket"("user", "quantity", "product") VALUES ("b", 1, 2);
+INSERT INTO "basket"("user", "quantity", "product") VALUES ("b", 2, 1);
 
-INSERT INTO "order"("user","status", "address") VALUES (1, "Delivered", 1);
-INSERT INTO "order"("user","status", "address") VALUES (1, "Delivered", 1);
-INSERT INTO "order"("user","status", "address") VALUES (2, "Accepted", 2);
+INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "Krakow", "Wielka", "22b");
+INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "Warsaw", "Lwowska", "21/3");
 
+INSERT INTO "order"("user", "status", "address") VALUES ("a", "Delivered", 1);
+INSERT INTO "order"("user", "status", "address") VALUES ("a", "Delivered", 1);
+INSERT INTO "order"("user", "status", "address") VALUES ("b", "Accepted", 2);
 
 INSERT INTO "orderprod"("name","price", "quantity", "order") VALUES ("Twilight", 28, 1, 1);
 INSERT INTO "orderprod"("name","price", "quantity", "order") VALUES ("New Moon", 30, 1, 2);
 INSERT INTO "orderprod"("name","price", "quantity", "order") VALUES ("Host", 31, 1, 2);
 INSERT INTO "orderprod"("name","price", "quantity", "order") VALUES ("Roge One", 23, 1, 3);
 
-INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "Krakow", "Wielka", "22b");
-INSERT INTO "orderad"("country","city", "street", "number") VALUES ("Poland", "Warsaw", "Lwowska", "21/3");
-
-
 INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("1111111111111111", "Ala Makota", "2/25", "011", 1);
 INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("1111111111111111", "Ala Makota", "2/25", "011", 2);
 INSERT INTO "payment"("number","name", "date", "code", "order") VALUES ("2222222222222222", "Jan Kowalski", "2/25", "222", 3);
+
+
 
 # --- !Downs
 
@@ -79,7 +78,6 @@ DELETE FROM "basket" WHERE id=3;
 DELETE FROM "order" WHERE id=1;
 DELETE FROM "order" WHERE id=2;
 DELETE FROM "order" WHERE id=3;
-DELETE FROM "order" WHERE id=4;
 
 DELETE FROM "orderprod" WHERE id=1;
 

@@ -73,34 +73,42 @@ CREATE TABLE "review" (
 
 CREATE TABLE "wishlist" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "user" INTEGER,
+  "user" VARCHAR,
   "quantity" INT NOT NULL,
   "product" INT NOT NULL,
   FOREIGN KEY("product") references product(id),
-  FOREIGN KEY (user)
-      REFERENCES user (id)
+  FOREIGN KEY (user) REFERENCES user (id)
       ON UPDATE CASCADE
       ON DELETE RESTRICT
 );
 
 CREATE TABLE "basket" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "user" INTEGER,
+  "user" VARCHAR,
   "quantity" INT NOT NULL,
   "product" INT NOT NULL,
   FOREIGN KEY("product") references product(id),
-  FOREIGN KEY (user)
-      REFERENCES user (id)
+  FOREIGN KEY (user) REFERENCES user (id)
       ON UPDATE CASCADE
       ON DELETE RESTRICT
 );
 
+CREATE TABLE "orderad" (
+   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   "country" VARCHAR NOT NULL,
+   "city" VARCHAR NOT NULL,
+   "street" VARCHAR NOT NULL,
+   "number" VARCHAR NOT NULL
+);
+
 CREATE TABLE "order" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "user" INTEGER,
+  "user" VARCHAR,
   "status" TEXT NOT NULL,
   "address" INT NOT NULL,
-  FOREIGN KEY("address") references orderad(id)
+  FOREIGN KEY (user) REFERENCES user (id)
+      ON UPDATE CASCADE
+      ON DELETE RESTRICT
 );
 
 CREATE TABLE "orderprod" (
@@ -110,14 +118,6 @@ CREATE TABLE "orderprod" (
    "quantity" INT NOT NULL,
    "order" INT NOT NULL,
    FOREIGN KEY("order") references "order" (id)
-);
-
-CREATE TABLE "orderad" (
-   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-   "country" VARCHAR NOT NULL,
-   "city" VARCHAR NOT NULL,
-   "street" VARCHAR NOT NULL,
-   "number" VARCHAR NOT NULL
 );
 
 CREATE TABLE "payment" (
@@ -137,9 +137,9 @@ CREATE TABLE "payment" (
 
 
 DROP TABLE "payment";
-DROP TABLE "orderad";
 DROP TABLE "orderprod";
 DROP TABLE "order";
+DROP TABLE "orderad";
 DROP TABLE "basket";
 DROP TABLE "wishlist";
 DROP TABLE "review";

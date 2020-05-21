@@ -15,10 +15,9 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, order
 
   class OrderTable(tag: Tag) extends Table[Order](tag, "order") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def user = column[Int]("user")
+    def user = column[String]("user")
     def status = column[String]("status")
     def address = column[Int]("address")
-    private def addressFk = foreignKey("address_fk", address, orderad)(_.id)
     def * = (id, user, status, address) <> ((Order.apply _).tupled, Order.unapply)
   }
 
@@ -27,7 +26,7 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, order
   val order = TableQuery[OrderTable]
   private val orderad = TableQuery[OrderAdTable]
 
-  def create(user: Int, status: String, address: Int): Future[Order] = db.run {
+  def create(user: String, status: String, address: Int): Future[Order] = db.run {
     (order.map(o => (o.user, o.status, o.address))
       returning order.map(_.id)
       into {case ((user, status, address),id) => Order(id, user, status, address)}
@@ -38,7 +37,7 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, order
     order.result
   }
 
-  def getByUser(userId: Int): Future[Seq[Order]] = db.run {
+  def getByUser(userId: String): Future[Seq[Order]] = db.run {
     order.filter(_.user === userId).result
   }
 

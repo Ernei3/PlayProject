@@ -19,7 +19,7 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
 
   val wishForm: Form[CreateWishForm] = Form {
     mapping(
-      "user" -> number,
+      "user" -> nonEmptyText,
       "quantity" -> number,
       "product" -> number
     )(CreateWishForm.apply)(CreateWishForm.unapply)
@@ -28,14 +28,14 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
   val updateWishForm: Form[UpdateWishForm] = Form {
     mapping(
       "id" -> number,
-      "user" -> number,
+      "user" -> nonEmptyText,
       "quantity" -> number,
       "product" -> number
     )(UpdateWishForm.apply)(UpdateWishForm.unapply)
   }
 
 
-  def wishlist(userId: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
+  def wishlist(userId: String) = Action.async { implicit request: MessagesRequest[AnyContent] =>
     val produkty = productRepo.list()
     val prod = Await.result(produkty, Duration.Inf)
 
@@ -101,7 +101,7 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
 
 
 
-  def wishlistJson(userId: Int) = Action.async { implicit request =>
+  def wishlistJson(userId: String) = Action.async { implicit request =>
     val listy = wishRepo.getByUser(userId)
     listy.map( wishlists => Ok(Json.toJson(wishlists)))
   }
@@ -139,5 +139,5 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
 }
 
 
-case class CreateWishForm(user: Int, quantity: Int, product: Int)
-case class UpdateWishForm(id: Int, user: Int, quantity: Int, product: Int)
+case class CreateWishForm(user: String, quantity: Int, product: Int)
+case class UpdateWishForm(id: Int, user: String, quantity: Int, product: Int)

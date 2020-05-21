@@ -73,14 +73,14 @@ DELETE      /removeReviewJson               controllers.ReviewController.removeR
 
 
 
-GET         /wishlist/:userId               controllers.WishlistController.wishlist(userId: Int)
+GET         /wishlist/:userId               controllers.WishlistController.wishlist(userId: String)
 GET         /allWishes                      controllers.WishlistController.allWishes
 GET         /addToWishlistMenu/:productId    controllers.WishlistController.addToWishlistMenu(productId: Int)
 POST        /addToWishlist/:productId       controllers.WishlistController.addToWishlist(productId: Int)
 POST        /updateWishlist                 controllers.WishlistController.updateWishlist
 GET         /removeFromWishlist/:id         controllers.WishlistController.removeFromWishlist(id: Int)
 
-GET         /wishlistJson/:userId           controllers.WishlistController.wishlistJson(userId: Int)
+GET         /wishlistJson/:userId           controllers.WishlistController.wishlistJson(userId: String)
 GET         /allWishesJson                  controllers.WishlistController.allWishesJson
 POST        /addToWishlistJson              controllers.WishlistController.addToWishlistJson
 PUT         /updateWishlistJson             controllers.WishlistController.updateWishlistJson
@@ -88,14 +88,14 @@ DELETE      /removeFromWishlistJson         controllers.WishlistController.remov
 
 
 
-GET         /basket/:userId                 controllers.BasketController.basket(userId: Int)
+GET         /basket/:userId                 controllers.BasketController.basket(userId: String)
 GET         /allBaskets                     controllers.BasketController.allBaskets
 GET         /addToBasketMenu/:productId     controllers.BasketController.addToBasketMenu(productId: Int)
 POST        /addToBasket/:productId         controllers.BasketController.addToBasket(productId: Int)
 POST        /updateBasket                   controllers.BasketController.updateBasket
 GET         /removeFromBasket/:id           controllers.BasketController.removeFromBasket(id: Int)
 
-GET         /basketJson/:userId             controllers.BasketController.basketJson(userId: Int)
+GET         /basketJson/:userId             controllers.BasketController.basketJson(userId: String)
 GET         /allBasketsJson                 controllers.BasketController.allBasketsJson
 POST        /addToBasketJson                controllers.BasketController.addToBasketJson
 PUT         /updateBasketJson               controllers.BasketController.updateBasketJson
@@ -104,16 +104,16 @@ DELETE      /removeFromBasketJson           controllers.BasketController.removeF
 
 
 GET         /allOrders                      controllers.OrderController.allOrders
-GET         /orders/:userId                 controllers.OrderController.orders(userId: Int)
+GET         /orders/:userId                 controllers.OrderController.orders(userId: String)
 GET         /orderDetails/:id               controllers.OrderController.orderDetails(id: Int)
-GET         /addOrder/:userId               controllers.OrderController.addOrder(userId: Int)
+GET         /addOrder/:userId               controllers.OrderController.addOrder(userId: String)
 GET         /updateOrder/:id                controllers.OrderController.updateOrderMenu(id: Int)
 POST        /updateOrder                    controllers.OrderController.updateOrder
 GET         /removeOrder/:id                controllers.OrderController.removeOrder(id: Int)
 GET         /dropOrder/:id                  controllers.OrderController.dropOrder(id: Int)
 
 GET         /allOrdersJson                  controllers.OrderController.allOrdersJson
-GET         /ordersJson/:userId             controllers.OrderController.ordersJson(userId: Int)
+GET         /ordersJson/:userId             controllers.OrderController.ordersJson(userId: String)
 GET         /orderDetailsJson/:id           controllers.OrderController.orderDetailsJson(id: Int)
 POST        /addOrderJson                   controllers.OrderController.addOrderJson
 GET         /updateOrderMenuJson/:id        controllers.OrderController.updateOrderMenuJson(id: Int)
@@ -174,8 +174,6 @@ DELETE      /removePaymentJson              controllers.PaymentController.remove
 GET     /authenticate/:provider             auth.SocialAuthController.authenticate(provider)
 GET     /api/user/role                      auth.UserManagerController.userRoles()
 POST    /api/user/:userId/role              auth.UserManagerController.changeUserRole(userId: java.util.UUID)
-
-GET     /$any<.*>                           controllers.HomeController.reactApp(any)
 
 
 # Map static resources from the /public folder to the /assets URL path

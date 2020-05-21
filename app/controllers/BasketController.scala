@@ -19,7 +19,7 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
 
   val basketForm: Form[CreateBasketForm] = Form {
     mapping(
-      "user" -> number,
+      "user" -> nonEmptyText,
       "quantity" -> number,
       "product" -> number
     )(CreateBasketForm.apply)(CreateBasketForm.unapply)
@@ -28,13 +28,13 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
   val updateBasketForm: Form[UpdateBasketForm] = Form {
     mapping(
       "id" -> number,
-      "user" -> number,
+      "user" -> nonEmptyText,
       "quantity" -> number,
       "product" -> number
     )(UpdateBasketForm.apply)(UpdateBasketForm.unapply)
   }
 
-  def basket(userId: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
+  def basket(userId: String) = Action.async { implicit request: MessagesRequest[AnyContent] =>
     val produkty = productRepo.list()
     val prod = Await.result(produkty, Duration.Inf)
 
@@ -98,7 +98,7 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
   }
 
 
-  def basketJson(userId: Int) = Action.async { implicit request =>
+  def basketJson(userId: String) = Action.async { implicit request =>
     val koszyk = basketRepo.getByUser(userId)
     koszyk.map( baskets => Ok(Json.toJson(baskets)))
   }
@@ -131,5 +131,5 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
 
 }
 
-case class CreateBasketForm(user: Int, quantity: Int, product: Int)
-case class UpdateBasketForm(id: Int, user: Int, quantity: Int, product: Int)
+case class CreateBasketForm(user: String, quantity: Int, product: Int)
+case class UpdateBasketForm(id: Int, user: String, quantity: Int, product: Int)

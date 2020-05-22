@@ -10,6 +10,8 @@ import scala.concurrent.Future
 
 trait UserDAO {
 
+  def list() : Future[Seq[User]]
+
   def updateUserRole(userId: UUID, role: UserRoles.Value): Future[Boolean]
 
   def find(loginInfo: LoginInfo): Future[Option[User]]

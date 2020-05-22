@@ -4,6 +4,7 @@ import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import javax.inject._
+import models.auth.dao.UserDAO
 import play.api.Environment
 import play.api.http.ContentTypes
 import play.api.i18n.I18nSupport
@@ -20,12 +21,20 @@ class HomeController @Inject()(components: ControllerComponents,
                                environment: Environment,
                                ws: WSClient,
                                indexRenderService: IndexRenderService,
-                               authInfoRepository: AuthInfoRepository)
+                               authInfoRepository: AuthInfoRepository,
+                               userRepo: UserDAO)
                               (implicit ec: ExecutionContext) extends AbstractController(components) with I18nSupport {
 
   def index: Action[AnyContent] = Action {
     Ok(views.html.index("Main Page"))
   }
+
+  def allUsers: Action[AnyContent] = Action.async {
+    val consumer = userRepo.list()
+    consumer.map( users => Ok(views.html.allUsers(users)))
+
+  }
+
 
   /*silhouette.UserAwareAction.async { implicit request =>
   fetchWebpackServer(path)

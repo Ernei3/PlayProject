@@ -175,6 +175,8 @@ GET     /authenticate/:provider             auth.SocialAuthController.authentica
 GET     /api/user/role                      auth.UserManagerController.userRoles()
 POST    /api/user/:userId/role              auth.UserManagerController.changeUserRole(userId: java.util.UUID)
 
+GET     /allUsers                           controllers.HomeController.allUsers()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -16,6 +16,15 @@ class UserDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
 
   import profile.api._
 
+  def list() = {
+    val query = slickUsers.result
+
+    db.run(query).map { resultOption =>
+      resultOption.map(DBUser.toUser)
+    }
+
+  }
+
   def find(loginInfo: LoginInfo) = {
     val userQuery = for {
       dbLoginInfo <- loginInfoQuery(loginInfo)

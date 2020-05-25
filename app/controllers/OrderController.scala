@@ -11,11 +11,16 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
+import models.auth.UserRoles
+import utils.auth.{DefaultEnv, HasRole}
 
 
 
 @Singleton
-class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRepository, basketRepo:BasketRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRepository, basketRepo:BasketRepository,
+                                silhouette: Silhouette[DefaultEnv], cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
 
   val updateOrderForm: Form[UpdateOrderForm] = Form {
@@ -111,15 +116,13 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     zamowienia.map( orders => Ok(Json.toJson(orders)))
   }
 
-  def orderDetailsJson(id: Int) = Action.async {
+  def orderDetailsJson(id: Int) = silhouette.SecuredAction(HasRole(UserRoles.User)).async {
     val zamowienia = orderRepo.getById(id)
     zamowienia.map( order => Ok(Json.toJson(order)))
   }
 
   def addOrderJson = Action.async { implicit request =>
-
     val order:Order = request.body.asJson.get.as[Order]
-
     val zamowienie = orderRepo.create(order.user, order.status, order.address)
     zamowienie.map(ord => Ok(Json.toJson(ord)))
   }

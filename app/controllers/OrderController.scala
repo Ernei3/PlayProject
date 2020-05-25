@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.{Basket, BasketRepository, Order, OrderRepository, Product, ProductRepository}
+import models.{BasketRepository, Order, OrderRepository, ProductRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.Json
@@ -116,9 +116,17 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     zamowienia.map( orders => Ok(Json.toJson(orders)))
   }
 
-  def orderDetailsJson(id: Int) = silhouette.SecuredAction(HasRole(UserRoles.User)).async {
+  def orderDetailsJson(id: Int) = silhouette.SecuredAction(HasRole(UserRoles.User)).async { securedRequest =>
+
     val zamowienia = orderRepo.getById(id)
-    zamowienia.map( order => Ok(Json.toJson(order)))
+    zamowienia.map( order =>
+        if(securedRequest.identity.userID == order.user){
+          Ok(Json.toJson(order))
+        }else{
+          Unauthorized
+        }
+      )
+
   }
 
   def addOrderJson = Action.async { implicit request =>

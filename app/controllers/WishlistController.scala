@@ -11,11 +11,15 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
+import models.auth.UserRoles
+import utils.auth.{DefaultEnv, HasRole}
 
 
 @Singleton
-class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: ProductRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: ProductRepository,
+                                   silhouette: Silhouette[DefaultEnv], cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
   val wishForm: Form[CreateWishForm] = Form {
     mapping(
@@ -101,9 +105,14 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
 
 
 
-  def wishlistJson(userId: String) = Action.async { implicit request =>
-    val listy = wishRepo.getByUser(userId)
-    listy.map( wishlists => Ok(Json.toJson(wishlists)))
+  def wishlistJson(userId: String) = silhouette.SecuredAction(HasRole(UserRoles.User)).async { securedRequest =>
+    if(userId == securedRequest.identity.userID){
+      val listy = wishRepo.getByUser(userId)
+      listy.map( wishlists => Ok(Json.toJson(wishlists)))
+    }else{
+      Future.successful(Unauthorized)
+    }
+
   }
 
   def allWishesJson = Action.async { implicit request =>
@@ -114,22 +123,39 @@ class WishlistController @Inject()(wishRepo: WishlistRepository, productRepo: Pr
     listy.map( wishlists => Ok(Json.toJson(wishlists, prod)))
   }
 
-  def addToWishlistJson: Action[AnyContent] = Action { implicit request =>
-    val wishlist:Wishlist = request.body.asJson.get.as[Wishlist]
-    wishRepo.create(wishlist.user, wishlist.quantity, wishlist.product)
-    Redirect("/wishlistJson/"+wishlist.user)
+  def addToWishlistJson: Action[AnyContent] = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val wishlist:Wishlist = securedRequest.body.asJson.get.as[Wishlist]
+
+    if(wishlist.user == securedRequest.identity.userID){
+      wishRepo.create(wishlist.user, wishlist.quantity, wishlist.product)
+      Ok(Json.toJson("Success."))
+    }else{
+      Unauthorized
+    }
   }
 
-  def updateWishlistJson: Action[AnyContent] = Action { implicit request =>
-    val wishlist:Wishlist = request.body.asJson.get.as[Wishlist]
-    wishRepo.update(wishlist.id, Wishlist(wishlist.id, wishlist.user, wishlist.quantity, wishlist.product))
-    Redirect("/wishlistJson/"+wishlist.user)
+  def updateWishlistJson: Action[AnyContent] = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val wishlist:Wishlist = securedRequest.body.asJson.get.as[Wishlist]
+
+    if(securedRequest.identity.userID == wishlist.user){
+      wishRepo.update(wishlist.id, Wishlist(wishlist.id, wishlist.user, wishlist.quantity, wishlist.product))
+      Ok(Json.toJson("Success."))
+    }else{
+      Unauthorized
+    }
+
+
   }
 
-  def removeFromWishlistJson: Action[AnyContent] = Action { implicit request =>
-    val wishlist:Wishlist = request.body.asJson.get.as[Wishlist]
-    wishRepo.delete(wishlist.id)
-    Redirect("/wishlistJson/"+wishlist.user)
+  def removeFromWishlistJson: Action[AnyContent] = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val wishlist:Wishlist = securedRequest.body.asJson.get.as[Wishlist]
+
+    if(securedRequest.identity.userID == wishlist.user) {
+      wishRepo.delete(wishlist.id)
+      Ok(Json.toJson("Success."))
+    }else{
+      Unauthorized
+    }
   }
 
 

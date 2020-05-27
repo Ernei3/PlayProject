@@ -1,11 +1,14 @@
 package controllers
 
+import com.mohiva.play.silhouette.api.Silhouette
 import javax.inject._
+import models.auth.UserRoles
 import models.{Order, OrderAd, OrderAdRepository, OrderRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
 import play.api.libs.json._
+import utils.auth.{DefaultEnv, HasRole}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -15,7 +18,8 @@ import scala.util.{Failure, Success}
 
 
 @Singleton
-class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:OrderRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:OrderRepository,
+                                  silhouette: Silhouette[DefaultEnv], cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
   val createAddressForm: Form[CreateAddressForm] = Form {
     mapping(
@@ -116,16 +120,23 @@ class OrderAdController @Inject()(orderAdRepo: OrderAdRepository, orderRepo:Orde
     adresy.map(orderad => Ok(Json.toJson(orderad)))
   }
 
-  def addAddressJson(orderId: Int) = Action { implicit request =>
+  def addAddressJson(orderId: Int) = silhouette.SecuredAction(HasRole(UserRoles.User)).async { securedRequest =>
 
-    val orderad:OrderAd = request.body.asJson.get.as[OrderAd]
+    val orderad:OrderAd = securedRequest.body.asJson.get.as[OrderAd]
 
     val zamowienie = orderRepo.getById(orderId)
+
     val address = orderAdRepo.create(orderad.country, orderad.city, orderad.street, orderad.number)
 
     val adr = Await.result(address, Duration.Inf)
-    zamowienie.map( order => orderRepo.update(order.id, Order(order.id, order.user, order.status, adr.id)))
-    Redirect("/ordersJson/"+orderId)
+    zamowienie.map( order =>
+      if(securedRequest.identity.userID == order.user){
+        orderRepo.update(order.id, Order(order.id, order.user, order.status, adr.id))
+        Ok(Json.toJson("Success"))
+      }else{
+        Unauthorized
+      }
+    )
 
   }
 

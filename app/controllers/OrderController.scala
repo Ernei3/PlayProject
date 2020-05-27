@@ -106,9 +106,14 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
   }
 
 
-  def ordersJson(userId: String) = Action.async { implicit request =>
-    val zamowienia = orderRepo.getByUser(userId)
-    zamowienia.map( orders => Ok(Json.toJson(orders)))
+  def ordersJson(userId: String) = silhouette.SecuredAction(HasRole(UserRoles.User)).async { securedRequest =>
+    if(securedRequest.identity.userID == userId){
+      val zamowienia = orderRepo.getByUser(userId)
+      zamowienia.map( orders => Ok(Json.toJson(orders)))
+    }else{
+      Future.successful(Unauthorized)
+    }
+
   }
 
   def allOrdersJson = Action.async { implicit request =>
@@ -142,10 +147,14 @@ class OrderController @Inject()(orderRepo:OrderRepository, productRepo:ProductRe
     })
   }
 
-  def updateOrderJson: Action[AnyContent] = Action { implicit request =>
-    val order:Order = request.body.asJson.get.as[Order]
-    orderRepo.update(order.id, Order(order.id, order.user, order.status, order.address))
-    Redirect("/ordersJson/"+order.user)
+  def updateOrderJson: Action[AnyContent] = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val order:Order = securedRequest.body.asJson.get.as[Order]
+    if(securedRequest.identity.userID == order.user){
+      orderRepo.update(order.id, Order(order.id, order.user, order.status, order.address))
+      Ok(Json.toJson("Success"))
+    }else{
+      Unauthorized
+    }
   }
 
   def dropOrderJson: Action[AnyContent] = Action { implicit request =>

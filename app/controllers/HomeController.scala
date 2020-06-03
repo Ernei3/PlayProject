@@ -35,10 +35,10 @@ class HomeController @Inject()(components: ControllerComponents,
 
   }
 
-
-  /*silhouette.UserAwareAction.async { implicit request =>
-  fetchWebpackServer(path)
-}*/
+  def signOut: Action[AnyContent] = silhouette.SecuredAction.async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, Ok)
+  }
 
   private def fetchWebpackServer(path: String)(implicit request: RequestHeader): Future[Result] = {
     ws.url(s"http://localhost:3000/$path").get().map { r =>
@@ -51,9 +51,5 @@ class HomeController @Inject()(components: ControllerComponents,
       }
     }
   }
-
-  def signOut: Action[AnyContent] = silhouette.SecuredAction.async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
-    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
-    silhouette.env.authenticatorService.discard(request.authenticator, Ok)
-  }
+  
 }

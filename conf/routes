@@ -173,6 +173,7 @@ DELETE      /removePaymentJson              controllers.PaymentController.remove
 
 #Auth
 GET     /authenticate/:provider             auth.SocialAuthController.authenticate(provider)
+GET     /api/signOut                                        controllers.HomeController.signOut()
 GET     /api/user/role                      auth.UserManagerController.userRoles()
 POST    /api/user/:userId/role              auth.UserManagerController.changeUserRole(userId: java.util.UUID)
 

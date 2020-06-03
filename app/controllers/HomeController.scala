@@ -39,17 +39,6 @@ class HomeController @Inject()(components: ControllerComponents,
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, Ok)
   }
-
-  private def fetchWebpackServer(path: String)(implicit request: RequestHeader): Future[Result] = {
-    ws.url(s"http://localhost:3000/$path").get().map { r =>
-      if (r.contentType.equalsIgnoreCase(HTML(Codec.utf_8))) {
-        val html = r.bodyAsBytes.utf8String
-
-        Ok(indexRenderService.setCsrfToken(html)).as(ContentTypes.HTML)
-      } else {
-        new Status(r.status)(r.bodyAsBytes).as(r.contentType)
-      }
-    }
-  }
   
+
 }

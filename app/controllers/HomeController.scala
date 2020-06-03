@@ -1,25 +1,55 @@
 package controllers
 
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import javax.inject._
+import models.auth.dao.UserDAO
+import play.api.Environment
+import play.api.http.ContentTypes
+import play.api.i18n.I18nSupport
+import play.api.libs.ws.WSClient
 import play.api.mvc._
+import services.IndexRenderService
+import utils.auth.DefaultEnv
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
+import scala.concurrent.{ExecutionContext, Future}
+
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(components: ControllerComponents,
+                               silhouette: Silhouette[DefaultEnv],
+                               environment: Environment,
+                               ws: WSClient,
+                               indexRenderService: IndexRenderService,
+                               authInfoRepository: AuthInfoRepository,
+                               userRepo: UserDAO)
+                              (implicit ec: ExecutionContext) extends AbstractController(components) with I18nSupport {
 
-  /**
-   * Create an Action to render an HTML page with a welcome message.
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
-  def index = Action {
-    Ok(views.html.index("This is the main page."))
+  def index: Action[AnyContent] = Action {
+    Ok(views.html.index("Main Page"))
   }
 
+  def allUsers: Action[AnyContent] = Action.async {
+    val consumer = userRepo.list()
+    consumer.map( users => Ok(views.html.allUsers(users)))
 
+  }
 
+  def signOut: Action[AnyContent] = silhouette.SecuredAction.async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, Ok)
+  }
+
+  private def fetchWebpackServer(path: String)(implicit request: RequestHeader): Future[Result] = {
+    ws.url(s"http://localhost:3000/$path").get().map { r =>
+      if (r.contentType.equalsIgnoreCase(HTML(Codec.utf_8))) {
+        val html = r.bodyAsBytes.utf8String
+
+        Ok(indexRenderService.setCsrfToken(html)).as(ContentTypes.HTML)
+      } else {
+        new Status(r.status)(r.bodyAsBytes).as(r.contentType)
+      }
+    }
+  }
+  
 }

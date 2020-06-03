@@ -11,15 +11,19 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
+import models.auth.UserRoles
+import utils.auth.{DefaultEnv, HasRole}
 
 
 @Singleton
-class BasketController @Inject()(basketRepo:BasketRepository, productRepo: ProductRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+class BasketController @Inject()(basketRepo:BasketRepository, productRepo: ProductRepository,
+                                 silhouette: Silhouette[DefaultEnv], cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
   val basketForm: Form[CreateBasketForm] = Form {
     mapping(
-      "user" -> number,
+      "user" -> nonEmptyText,
       "quantity" -> number,
       "product" -> number
     )(CreateBasketForm.apply)(CreateBasketForm.unapply)
@@ -28,13 +32,13 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
   val updateBasketForm: Form[UpdateBasketForm] = Form {
     mapping(
       "id" -> number,
-      "user" -> number,
+      "user" -> nonEmptyText,
       "quantity" -> number,
       "product" -> number
     )(UpdateBasketForm.apply)(UpdateBasketForm.unapply)
   }
 
-  def basket(userId: Int) = Action.async { implicit request: MessagesRequest[AnyContent] =>
+  def basket(userId: String) = Action.async { implicit request: MessagesRequest[AnyContent] =>
     val produkty = productRepo.list()
     val prod = Await.result(produkty, Duration.Inf)
 
@@ -98,9 +102,13 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
   }
 
 
-  def basketJson(userId: Int) = Action.async { implicit request =>
-    val koszyk = basketRepo.getByUser(userId)
-    koszyk.map( baskets => Ok(Json.toJson(baskets)))
+  def basketJson(userId: String) = silhouette.SecuredAction(HasRole(UserRoles.User)).async { securedRequest =>
+    if(userId == securedRequest.identity.userID) {
+      val koszyk = basketRepo.getByUser(userId)
+      koszyk.map(baskets => Ok(Json.toJson(baskets)))
+    }else{
+      Future.successful(Unauthorized)
+    }
   }
 
   def allBasketsJson = Action.async { implicit request =>
@@ -109,27 +117,45 @@ class BasketController @Inject()(basketRepo:BasketRepository, productRepo: Produ
     koszyk.map( baskets => Ok(Json.toJson(baskets)))
   }
 
-  def addToBasketJson: Action[AnyContent] = Action { implicit request =>
-    val basket:Basket = request.body.asJson.get.as[Basket]
-    basketRepo.create(basket.user, basket.quantity, basket.product)
-    Redirect("/basketJson/"+basket.user)
+  def addToBasketJson: Action[AnyContent] = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val basket:Basket = securedRequest.body.asJson.get.as[Basket]
+
+    if(basket.user == securedRequest.identity.userID) {
+      basketRepo.create(basket.user, basket.quantity, basket.product)
+      Ok(Json.toJson("Success."))
+    }else{
+      Unauthorized
+    }
+
   }
 
-  def updateBasketJson: Action[AnyContent] = Action { implicit request =>
-    val basket:Basket = request.body.asJson.get.as[Basket]
-    basketRepo.update(basket.id, Basket(basket.id, basket.user, basket.quantity, basket.product))
-    Redirect("/basketJson/"+basket.user)
+  def updateBasketJson: Action[AnyContent] = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val basket:Basket = securedRequest.body.asJson.get.as[Basket]
+
+    if(basket.user == securedRequest.identity.userID){
+      basketRepo.update(basket.id, Basket(basket.id, basket.user, basket.quantity, basket.product))
+      Ok(Json.toJson("Success."))
+    }else{
+      Unauthorized
+    }
+
   }
 
-  def removeFromBasketJson: Action[AnyContent] = Action { implicit request =>
-    val basket:Basket = request.body.asJson.get.as[Basket]
-    basketRepo.delete(basket.id)
-    Redirect("/basketJson/"+basket.user)
+  def removeFromBasketJson: Action[AnyContent] = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val basket:Basket = securedRequest.body.asJson.get.as[Basket]
+
+    if(basket.user == securedRequest.identity.userID) {
+      basketRepo.delete(basket.id)
+      Redirect("/basketJson/" + basket.user)
+    }else{
+      Unauthorized
+    }
+
   }
 
 
 
 }
 
-case class CreateBasketForm(user: Int, quantity: Int, product: Int)
-case class UpdateBasketForm(id: Int, user: Int, quantity: Int, product: Int)
+case class CreateBasketForm(user: String, quantity: Int, product: Int)
+case class UpdateBasketForm(id: Int, user: String, quantity: Int, product: Int)

@@ -1,0 +1,12 @@
+@import models.auth.User
+@(users: Seq[User])
+
+@for(user <- users){
+    <p>@user.userID
+    @user.firstName
+    @user.lastName
+    </p>
+
+
+
+}

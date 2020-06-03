@@ -1,11 +1,14 @@
 package controllers
 
+import com.mohiva.play.silhouette.api.Silhouette
 import javax.inject._
+import models.auth.UserRoles
 import models.{Order, OrderRepository, Payment, PaymentRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc._
+import utils.auth.{DefaultEnv, HasRole}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -14,7 +17,8 @@ import scala.util.{Failure, Success}
 
 
 @Singleton
-class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:OrderRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:OrderRepository,
+                                  silhouette: Silhouette[DefaultEnv], cc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
   val addPaymentForm: Form[AddPaymentForm] = Form {
     mapping(
@@ -116,10 +120,10 @@ class PaymentController @Inject()(paymentRepo: PaymentRepository, orderRepo:Orde
     zaplaty.map(payment => Ok(Json.toJson(payment)))
   }
 
-  def sendPaymentJson = Action { implicit request =>
-    val payment:Payment = request.body.asJson.get.as[Payment]
+  def sendPaymentJson = silhouette.SecuredAction(HasRole(UserRoles.User)) { securedRequest =>
+    val payment:Payment = securedRequest.body.asJson.get.as[Payment]
     paymentRepo.create(payment.number, payment.name, payment.date, payment.code, payment.order)
-    Redirect("/paymentJson/"+payment.order)
+    Ok(Json.toJson("Success"))
   }
 
   def changePaymentMenuJson(id: Int) = Action.async { implicit request =>

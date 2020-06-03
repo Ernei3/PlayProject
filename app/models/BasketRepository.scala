@@ -16,7 +16,7 @@ class BasketRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, prod
   class BasketTable(tag: Tag) extends Table[Basket](tag, "basket") {
 
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def user = column[Int]("user")
+    def user = column[String]("user")
     def quantity = column[Int]("quantity")
     def product = column[Int]("product")
     private def productFk = foreignKey("prod_fk", product, prod)(_.id)
@@ -30,7 +30,7 @@ class BasketRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, prod
   private val prod = TableQuery[ProductTable]
   private val basket = TableQuery[BasketTable]
 
-  def create(user: Int, quantity: Int, product: Int): Future[Basket] = db.run {
+  def create(user: String, quantity: Int, product: Int): Future[Basket] = db.run {
     (basket.map(b => (b.user, b.quantity,b.product))
       returning basket.map(_.id)
       into {case ((user,quantity,product),id) => Basket(id, user, quantity, product)}
@@ -41,7 +41,7 @@ class BasketRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, prod
     basket.result
   }
 
-  def getByUser(userId: Int): Future[Seq[Basket]] = db.run {
+  def getByUser(userId: String): Future[Seq[Basket]] = db.run {
     basket.filter(_.user === userId).result
   }
 

@@ -20,7 +20,7 @@ class OrderProdController @Inject()(orderProdRepo:OrderProdRepository, orderRepo
   val addToOrderForm: Form[AddToOrderForm] = Form {
     mapping(
       "orderId" -> number,
-      "userId" -> number,
+      "userId" -> nonEmptyText,
     )(AddToOrderForm.apply)(AddToOrderForm.unapply)
   }
 
@@ -166,5 +166,5 @@ class OrderProdController @Inject()(orderProdRepo:OrderProdRepository, orderRepo
 
 }
 
-case class AddToOrderForm(orderId: Int, userId: Int)
+case class AddToOrderForm(orderId: Int, userId: String)
 case class UpdateOrderedForm(id: Int, name: String, price: Int, quantity: Int, order: Int)

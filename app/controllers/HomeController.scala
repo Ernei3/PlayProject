@@ -39,6 +39,6 @@ class HomeController @Inject()(components: ControllerComponents,
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, Ok)
   }
-  
+
 
 }
